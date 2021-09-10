@@ -69,12 +69,12 @@ const OnboardingScreen = ({navigation}) => {
             title: 'Share Your Favorites',
             subtitle: 'Share Your Thoughts With Similar Kind of People',
           },
-          {
-            backgroundColor: '#e9bcbe',
-            image: <Image source={require('../../../assets/images/avatar-1.png')} />,
-            title: 'Become The Star',
-            subtitle: "Let The Spot Light Capture You",
-          },
+        //   {
+        //     backgroundColor: '#e9bcbe',
+        //     image: <Image source={require('../../../assets/images/avatar-1.png')} />,
+        //     title: 'Become The Star',
+        //     subtitle: "Let The Spot Light Capture You",
+        //   },
         ]}
       />
     );
