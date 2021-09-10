@@ -59,13 +59,13 @@ const OnboardingScreen = ({navigation}) => {
         pages={[
           {
             backgroundColor: '#a6e4d0',
-            image: <Image source={require('../../../assets/images/avatar-1.png')} />,
+            image: <Image source={require('../../../assets/images/logo.png')} />,
             title: 'Connect to the World',
             subtitle: 'A New Way To Connect With The World',
           },
           {
             backgroundColor: '#fdeb93',
-            image: <Image source={require('../../../assets/images/avatar-1.png')} />,
+            image: <Image source={require('../../../assets/images/logo.png')} />,
             title: 'Share Your Favorites',
             subtitle: 'Share Your Thoughts With Similar Kind of People',
           },

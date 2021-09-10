@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../screens/Login';
 import Register from '../screens/Resgiter';
 import Home from '../screens/Home';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import OnboardingScreen from '../screens/OnBoardingScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
 
 const RootStack = createStackNavigator();
 
@@ -36,7 +36,7 @@ const RootStackScreen = ({ navigation }) => {
 
     return (
         <RootStack.Navigator headerMode='none' initialRouteName={routeName}>
-            <Stack.Screen
+            <RootStack.Screen
                 name="Onboarding"
                 component={OnboardingScreen}
             />
