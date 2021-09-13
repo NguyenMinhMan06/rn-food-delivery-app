@@ -4,6 +4,7 @@ import { windowHeight, windowWidth } from '../../utils/Dimentions';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FA5 from 'react-native-vector-icons/FontAwesome5'
+import { fonts } from '../../assets/style';
 
 
 const FormInput = ({ labelValue, placeholderText, iconType, iconPassword, passCheck, ...rest }) => {
@@ -12,22 +13,22 @@ const FormInput = ({ labelValue, placeholderText, iconType, iconPassword, passCh
   return (
     <View style={styles.inputContainer}>
       <View style={styles.iconStyle}>
-        <AntDesign name={iconType} size={25} color="#666" />
+        <AntDesign name={iconType} size={25} color="#262626" />
       </View>
       <TextInput
         value={labelValue}
         style={styles.input}
         numberOfLines={1}
         placeholder={placeholderText}
-        placeholderTextColor="#666"
+        placeholderTextColor="#262626"
         secureTextEntry={secureTextEntry}
         {...rest}
       />
-      {iconPassword ? <TouchableOpacity style={styles.iconStyle} onPress={() => { setSecureTextEntry(!secureTextEntry) }}>
-        <FA5 name={secureTextEntry ? "eye-slash" : "eye"} size={25} color="#666" />
+      {iconPassword ? <TouchableOpacity style={{ ...styles.iconStyle, borderRightWidth: 0, }} onPress={() => { setSecureTextEntry(!secureTextEntry) }}>
+        <FA5 name={secureTextEntry ? "eye-slash" : "eye"} size={22} color="#262626" />
       </TouchableOpacity> : null}
-      {passCheck ? <View style={styles.iconStyle}>
-        {labelValue === passCheck ? <FA5 name={"check"} size={25} color="green" /> : null}
+      {passCheck ? <View style={{ ...styles.iconStyle, borderRightWidth: 0, }}>
+        {labelValue === passCheck ? <FA5 name={"check"} size={22} color="green" /> : null}
       </View> : null}
     </View>
   );
@@ -60,11 +61,9 @@ const styles = StyleSheet.create({
   input: {
     padding: 10,
     flex: 1,
-    fontSize: 16,
-    fontFamily: 'Lato-Regular',
-    color: '#333',
     justifyContent: 'center',
     alignItems: 'center',
+    ...fonts.type1
   },
   inputField: {
     padding: 10,

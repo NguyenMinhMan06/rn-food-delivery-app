@@ -31,7 +31,7 @@ const RootStackScreen = ({ navigation }) => {
     } else if (isFirstLaunch == true) {
         routeName = 'Onboarding';
     } else {
-        routeName = 'SignInScreen';
+        routeName = 'Onboarding';
     }
 
     return (

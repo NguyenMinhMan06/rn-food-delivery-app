@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
@@ -47,52 +48,15 @@ const Login = ({ navigation }) => {
     }, [loginState])
 
     return (
-        // <SafeAreaView style={styles.container}>
-        //     <View>
-        //         <Text style={styles.textLogo}>Pho My Food</Text>
-        //     </View>
-        //     <TextInput
-        //         style={styles.textInput}
-        //         placeholder="Username"
-        //         onChangeText={(val) => { setData({ ...data, username: val }) }}
-        //         value={data.username}
-        //     />
-
-        //     <TextInput
-        //         style={styles.textInput}
-        //         placeholder="Password"
-        //         onChangeText={(val) => { setData({ ...data, password: val }) }}
-        //         value={data.password}
-        //     />
-        //     <View >
-        //         <TouchableOpacity style={styles.btn} onPress={() => {
-        //             loginHandler(data.username, data.password)
-        //         }}>
-        //             <Text>
-        //                 Sign In
-        //             </Text>
-        //         </TouchableOpacity>
-
-        //     </View>
-        //     <View>
-        //         <TouchableOpacity onPress={() => {
-        //             setData({ username: '', password: '' })
-        //             navigation.navigate('SignUpScreen')
-
-        //         }}>
-        //             <Text style={styles.textHref}>
-        //                 Does not have account? Sign up now
-        //             </Text>
-        //         </TouchableOpacity>
-        //     </View>
-        // </SafeAreaView>
-
         <ScrollView contentContainerStyle={styles.container}>
 
             <Image
-                source={require('../../../assets/images/logo.png')}
+                source={require('../../../assets/images/ramen.png')}
                 style={styles.logo}
             />
+            <Text style={{ ...fonts.type1, fontStyle: 'italic', paddingBottom: 20, fontSize: 24, color: colors.default }}>
+                Pho-My Food
+            </Text>
             <FormInput
                 labelValue={data.email}
                 onChangeText={(val) => { setData({ ...data, email: val }) }}
@@ -127,13 +91,13 @@ const Login = ({ navigation }) => {
                 source={require('../../../assets/images/slide.png')}
                 resizeMode="contain"
             >
-                <Text>
+                <Text style={fonts.type1}>
                     Or
                 </Text>
             </ImageBackground>
 
-            <View style={{flexDirection:'row',marginBottom:60}}>
-                <Text style={styles.navButtonText}>
+            <View style={{ flexDirection: 'row', marginBottom: 60 }}>
+                <Text style={fonts.type3}>
                     Don't have an acount?{" "}
                 </Text>
                 <TouchableOpacity
@@ -141,7 +105,7 @@ const Login = ({ navigation }) => {
                     onPress={() => {
                         navigation.navigate('SignUpScreen')
                         setData({ email: '', password: '' })
-                    }}><Text style={{ ...styles.navButtonText, color: "#2e64e5" }} >Create here</Text>
+                    }}><Text style={{ ...fonts.type3, color: "#2e64e5" }} >Create here</Text>
                 </TouchableOpacity>
             </View>
 
@@ -163,27 +127,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
     },
     logo: {
-        height: 150,
-        width: 150,
+        height: windowHeight / 4.5,
+        width: windowWidth / 2,
         resizeMode: 'cover',
-        marginBottom: 20,
-    },
-    text: {
-        fontFamily: 'Kufam-SemiBoldItalic',
-        fontSize: 28,
-        marginBottom: 10,
-        color: '#051d5f',
     },
     navButton: {
         marginTop: 15,
     },
     forgotButton: {
-    },
-    navButtonText: {
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#666',
-        fontFamily: 'Lato-Regular',
     },
 
 })

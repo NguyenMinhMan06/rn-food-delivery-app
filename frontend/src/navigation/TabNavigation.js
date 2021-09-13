@@ -8,6 +8,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Favorites from '../screens/Favorites';
 import Discover from '../screens/Discover';
 import FA5 from 'react-native-vector-icons/FontAwesome5'
+import { colors } from '../../assets/style';
 
 const Tab = createBottomTabNavigator()
 
@@ -25,7 +26,7 @@ const CustomTabBarButton = ({ children, onPress }) => (
             width: 70,
             height: 70,
             borderRadius: 35,
-            backgroundColor: '#e32f45'
+            backgroundColor: colors.default
         }}>
             {children}
         </View>
@@ -44,7 +45,7 @@ const TabsScreen = () => {
                 elevation: 0,
                 backgroundColor: "#FFFFFF",
                 borderRadius: 15,
-                height: 80,
+                height: 60,
                 ...styles.shadow
             }
         }} >
@@ -58,14 +59,14 @@ const TabsScreen = () => {
                                 style={{
                                     width: 25,
                                     height: 25,
-                                    tintColor: focused ? '#e32f45' : '#748c94'
+                                    tintColor: focused ? colors.default : '#748c94'
                                 }}
                             /> */}
-                            <FA5 name={"home"} style={{ color: focused ? '#e32f45' : '#748c94' }} size={25} />
+                            <FA5 name={"home"} style={{ color: focused ? colors.default : '#748c94' }} size={25} />
 
 
                             <Text style={{
-                                color: focused ? '#e32f45' : '#748c94',
+                                color: focused ? colors.default : '#748c94',
                                 fontSize: 12,
                             }}>
                                 HOME
@@ -84,11 +85,11 @@ const TabsScreen = () => {
                                 style={{
                                     width: 25,
                                     height: 25,
-                                    tintColor: focused ? '#e32f45' : '#748c94'
+                                    tintColor: focused ? colors.default : '#748c94'
                                 }}
                             />
                             <Text style={{
-                                color: focused ? '#e32f45' : '#748c94',
+                                color: focused ? colors.default : '#748c94',
                                 fontSize: 12,
                             }}>
                                 DISCOVER
@@ -124,11 +125,11 @@ const TabsScreen = () => {
                                 style={{
                                     width: 25,
                                     height: 25,
-                                    tintColor: focused ? '#e32f45' : '#748c94'
+                                    tintColor: focused ? colors.default : '#748c94'
                                 }}
                             />
                             <Text style={{
-                                color: focused ? '#e32f45' : '#748c94',
+                                color: focused ? colors.default : '#748c94',
                                 fontSize: 12,
                             }}>
                                 FAVORITES
@@ -146,11 +147,11 @@ const TabsScreen = () => {
                                 style={{
                                     width: 25,
                                     height: 25,
-                                    tintColor: focused ? '#e32f45' : '#748c94'
+                                    tintColor: focused ? colors.default : '#748c94'
                                 }}
                             />
                             <Text style={{
-                                color: focused ? '#e32f45' : '#748c94',
+                                color: focused ? colors.default : '#748c94',
                                 fontSize: 12,
                             }}>
                                 PROFILE

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
@@ -9,7 +10,7 @@ import { registerAction } from '../../redux/action'
 
 const Register = ({ navigation }) => {
     const [data, setData] = useState({
-        username: '',
+        email: '',
         password: '',
         confirm_password: '',
         name: 'MINH MAN'
@@ -20,7 +21,7 @@ const Register = ({ navigation }) => {
 
     const registerHandler = () => {
 
-        if (data.username.length == 0 || data.password.length == 0 || data.confirm_password.length == 0) {
+        if (data.email.length == 0 || data.password.length == 0 || data.confirm_password.length == 0) {
             Alert.alert('Wrong Input!', 'field cannot be empty.', [
                 { text: 'Okay' }
             ]);
@@ -31,7 +32,7 @@ const Register = ({ navigation }) => {
             return;
         }
 
-        const action = registerAction(data.username, data.password, data.name)
+        const action = registerAction(data.email, data.password, data.name)
         dispatch(action)
     }
 
@@ -40,59 +41,24 @@ const Register = ({ navigation }) => {
             alert('Email exist! Please try again')
         }
         if (registerState.response === 'auth/invalid-email') {
-            alert('Bad format. Please try again')
+            alert('Email Wrong format. Please try again')
         }
         console.log('my register state', registerState)
     }, [registerState])
 
 
     return (
-        // <SafeAreaView style={styles.container}>
-        //     <Text>Register Pho My Food Member</Text>
-        //     <TextInput
-        //         style={styles.textInput}
-        //         placeholder="Username"
-        //         onChangeText={(val) => { setData({ ...data, username: val }) }}
-        //     />
-
-        //     <TextInput
-        //         style={styles.textInput}
-        //         placeholder="Password"
-        //         onChangeText={(val) => { setData({ ...data, password: val }) }}
-        //     />
-
-        //     <TextInput
-        //         style={styles.textInput}
-        //         placeholder="Confirm password"
-        //         onChangeText={(val) => { setData({ ...data, confirm_password: val }) }}
-        //     />
-        //     <View >
-        //         <TouchableOpacity style={styles.btn} onPress={() => {
-        //             registerHandler()
-        //         }}>
-        //             <Text>
-        //                 Sign Up
-        //             </Text>
-        //         </TouchableOpacity>
-
-        //     </View>
-        //     <View>
-        //         <TouchableOpacity onPress={() => { navigation.goBack() }}>
-        //             <Text style={styles.textHref}>
-        //                 Already have account? Login here
-        //             </Text>
-        //         </TouchableOpacity>
-        //     </View>
-        // </SafeAreaView>
-
         <ScrollView contentContainerStyle={styles.container}>
 
             <Image
-                source={require('../../../assets/images/logo.png')}
+                source={require('../../../assets/images/ramen.png')}
                 style={styles.logo}
             />
+            <Text style={{ ...fonts.type1, paddingBottom: 20, fontSize: 24, color: colors.default }}>
+                Register account
+            </Text>
             <FormInput
-                labelValue={data.email}
+                labelValue={data.username}
                 onChangeText={(val) => { setData({ ...data, email: val }) }}
                 placeholderText="Email"
                 iconType="mail"
@@ -131,31 +97,31 @@ const Register = ({ navigation }) => {
                 buttonTitle="Sign In"
                 onPress={() => registerHandler()}
             />
-            
+
             <ImageBackground
-            style={{
-                marginVertical:20,
-                width:'100%',
-                justifyContent:'center',
-                alignItems:'center',
-                // backgroundColor:'red'
-            }} 
-            source={require('../../../assets/images/slide.png')}
-            resizeMode="contain"
+                style={{
+                    marginVertical: 20,
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // backgroundColor:'red'
+                }}
+                source={require('../../../assets/images/slide.png')}
+                resizeMode="contain"
             >
-                <Text>
+                <Text style={fonts.type1}>
                     Or
                 </Text>
             </ImageBackground>
-            <View style={{flexDirection:'row'}}>
-                <Text style={styles.navButtonText}>
-                Already have account?{" "}
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={fonts.type3}>
+                    Already have account?{" "}
                 </Text>
                 <TouchableOpacity
                     style={styles.forgotButton}
                     onPress={() => {
                         navigation.goBack()
-                    }}><Text style={{ ...styles.navButtonText, color: "#2e64e5" }} >Login here</Text>
+                    }}><Text style={{ ...fonts.type3, color: "#2e64e5" }} >Login here</Text>
                 </TouchableOpacity>
             </View>
 
@@ -170,16 +136,14 @@ const styles = StyleSheet.create({
     container: {
         width: windowWidth,
         height: windowHeight,
-        justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
         backgroundColor: '#FFF'
     },
     logo: {
-        height: 150,
-        width: 150,
+        height: windowHeight / 4.5,
+        width: windowWidth / 2,
         resizeMode: 'cover',
-        marginBottom:20
     },
     text: {
         fontFamily: 'Kufam-SemiBoldItalic',
