@@ -15,7 +15,6 @@ const Tab = createBottomTabNavigator()
 const CustomTabBarButton = ({ children, onPress }) => (
     <TouchableOpacity
         style={{
-            top: -25,
             justifyContent: 'center',
             alignItems: 'center',
             ...styles.shadow
@@ -23,8 +22,8 @@ const CustomTabBarButton = ({ children, onPress }) => (
         onPress={onPress}
     >
         <View style={{
-            width: 70,
-            height: 70,
+            width: 60,
+            height: 60,
             borderRadius: 35,
             backgroundColor: colors.default
         }}>
@@ -38,14 +37,14 @@ const TabsScreen = () => {
         <Tab.Navigator tabBarOptions={{
             showLabel: false,
             style: {
-                position: 'absolute',
-                bottom: 25,
-                left: 20,
-                right: 20,
+                // position: 'absolute',
+                // bottom: 25,
+                // left: 20,
+                // right: 20,
                 elevation: 0,
                 backgroundColor: "#FFFFFF",
-                borderRadius: 15,
-                height: 60,
+                // borderRadius: 15,
+                // height: 60,
                 ...styles.shadow
             }
         }} >
@@ -53,7 +52,9 @@ const TabsScreen = () => {
                 name="Home"
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+
+                            {/* <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}> */}
                             {/* <Image source={require('../../assets/icons/pin.png')}
                                 resizeMode="contain"
                                 style={{
@@ -79,7 +80,8 @@ const TabsScreen = () => {
             <Tab.Screen name="Discover" component={Discover}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            {/* <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}> */}
                             <Image source={require('../../assets/icons/search.png')}
                                 resizeMode="contain"
                                 style={{
@@ -119,7 +121,8 @@ const TabsScreen = () => {
             <Tab.Screen name="Favorite" component={Favorites}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            {/* <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}> */}
                             <Image source={require('../../assets/icons/like.png')}
                                 resizeMode="contain"
                                 style={{
@@ -141,7 +144,8 @@ const TabsScreen = () => {
             <Tab.Screen name="ProfileTab" component={Profile}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        {/* <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}> */}
                             <Image source={require('../../assets/icons/user.png')}
                                 resizeMode="contain"
                                 style={{

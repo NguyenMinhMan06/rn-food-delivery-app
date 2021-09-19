@@ -19,5 +19,8 @@ export const GET_USER = 'GET_USER'
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS'
 export const GET_USER_FAIL = 'GET_USER_FAIL'
 
+export const ADD_TO_CART = 'ADD_TO_CART'
+export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
+
 
 

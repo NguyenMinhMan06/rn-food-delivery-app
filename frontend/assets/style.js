@@ -7,12 +7,12 @@ const colors= {
 
 const fonts = {
     type1: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#262626',
         fontFamily: 'Roboto-Regular'
     },
     type2:{
-        fontSize: 18,
+        fontSize: 16,
         color: '#ffffff',
         fontFamily: 'Roboto-Regular',
         fontWeight: 'bold',
@@ -23,7 +23,7 @@ const fonts = {
         fontWeight: '500',
         color: '#262626',
         fontFamily: 'Roboto-Regular',
-    }
+    },
 }
 
 export { fonts, colors }

@@ -1,4 +1,4 @@
-import { GET_USER, LOGIN, LOGOUT, REGISTER } from "./actionType"
+import { ADD_TO_CART, GET_USER, LOGIN, LOGOUT, REGISTER, REMOVE_FROM_CART } from "./actionType"
 
 
 export const loginAction = (email, password) => {
@@ -25,5 +25,19 @@ export const getUserAction = (uid) => {
     return {
         type: GET_USER,
         data: uid
+    }
+}
+
+export const addToCartAction = (product) => {
+    return {
+        type: ADD_TO_CART,
+        data: product
+    }
+}
+
+export const removeFromCart = (product) => {
+    return {
+        type: REMOVE_FROM_CART,
+        data: product
     }
 }
