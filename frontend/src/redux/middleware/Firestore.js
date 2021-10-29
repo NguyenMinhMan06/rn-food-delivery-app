@@ -93,8 +93,8 @@ export const favoriteItem = {
             .delete()
             .then(() => {
                 console.log('delete favorite successed')
-                return itemId
             }).catch(err => console.log(err))
+            return itemId
     },
     getFavItem: async (action) => {
         const list = []
