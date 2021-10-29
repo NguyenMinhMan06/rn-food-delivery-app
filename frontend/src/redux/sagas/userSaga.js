@@ -63,11 +63,14 @@ export function* getUser(action) {
     // console.log('UserSaga state-- ', state)
     // In ra các data đang có trong store
     const response = yield call(Firestore.getFirestoreUser, action);
-    console.log('saga logout')
     yield put({ type: ActionTypes.GET_USER_SUCCESS, response })
   } catch (error) {
     console.log('UserSaga', error)
     yield put({ type: ActionTypes.GET_USER_FAIL, error })
   }
+}
+
+export function* getUserLoc() {
+  
 }
 

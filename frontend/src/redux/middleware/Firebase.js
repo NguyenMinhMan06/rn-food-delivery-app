@@ -9,10 +9,10 @@ export const User = {
             .signInWithEmailAndPassword(userInfo.data.email, userInfo.data.password)
             .then(response => response).catch(error => {
                 if (error.code) {
-                    return error.code 
+                    return error.code
                 }
                 console.error(error);
-              });
+            });
     },
     registerWithEmail: (userInfo) => {
         console.log('firebase register user send API')
@@ -24,19 +24,19 @@ export const User = {
                     email: userInfo.data.email,
                     role: 'null',
                     name: userInfo.data.name
-                }).then(() =>{console.log('firestore added user completed')})
+                }).then(() => { console.log('firestore added user completed') })
                 return response
             }).catch(error => {
                 if (error.code) {
-                    return error.code 
+                    return error.code
                 }
                 console.error(error);
-              });
-            
+            });
+
     },
     logOutEmail: () => {
         console.log('im logging out')
         return auth().signOut().then(() => console.log('User signed out!'));
     },
-    
+
 }

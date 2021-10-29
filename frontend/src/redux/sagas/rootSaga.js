@@ -1,6 +1,8 @@
 import {all, takeLatest, takeEvery} from 'redux-saga/effects';
 import * as ActionTypes from '../action/actionType'
 import * as UserSaga from '../sagas/userSaga'
+import * as itemSaga from '../sagas/itemSaga'
+
 
  export default function* rootSaga() {
     yield all([
@@ -18,5 +20,25 @@ import * as UserSaga from '../sagas/userSaga'
 
     yield all([
         yield takeLatest(ActionTypes.GET_USER, UserSaga.getUser)
+    ])
+
+    yield all ([
+        yield takeLatest(ActionTypes.GET_ITEM, itemSaga.getItem)
+    ])
+
+    yield all ([
+        yield takeLatest(ActionTypes.GET_ITEM_CAT, itemSaga.getItemCat)
+    ])
+
+    yield all ([
+        yield takeLatest(ActionTypes.GET_ITEM_FAVORITE, itemSaga.getItemFav)
+    ])
+
+    yield all ([
+        yield takeLatest(ActionTypes.ADD_ITEM_FAVORITE, itemSaga.addItemFav)
+    ])
+
+    yield all ([
+        yield takeLatest(ActionTypes.REMOVE_ITEM_FAVORITE, itemSaga.removeItemFav)
     ])
 }

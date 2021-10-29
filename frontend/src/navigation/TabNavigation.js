@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Cart from '../screens/Cart';
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
@@ -9,8 +9,43 @@ import Favorites from '../screens/Favorites';
 import Discover from '../screens/Discover';
 import FA5 from 'react-native-vector-icons/FontAwesome5'
 import { colors } from '../../assets/style';
+import FoodDetail from '../screens/FoodDetail';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Delivery from '../screens/Home/Delivery';
+import TopTab from '../components/TopTab';
+import Address from '../screens/Address'
 
 const Tab = createBottomTabNavigator()
+const Stack = createStackNavigator()
+const TopTabStack = createStackNavigator()
+const MaterialTab = createMaterialTopTabNavigator();
+
+const TopTabMaterial = ({ navigation }) => {
+    return (
+        <MaterialTab.Navigator
+            swipeEnabled={false}
+            tabBar={props =>
+                <View style={{ width: '100%', height: '6%', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+                    <TopTab {...props} />
+                </View>
+            }
+        >
+            <MaterialTab.Screen name="Delivery" component={Home}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <Text>
+                            HELLO WORLD
+                        </Text>
+                    )
+                }}
+
+            />
+            <MaterialTab.Screen name="Pick-up" component={Delivery}
+            />
+        </MaterialTab.Navigator>
+    )
+}
 
 const CustomTabBarButton = ({ children, onPress }) => (
     <TouchableOpacity
@@ -22,8 +57,8 @@ const CustomTabBarButton = ({ children, onPress }) => (
         onPress={onPress}
     >
         <View style={{
-            width: 60,
-            height: 60,
+            width: 45,
+            height: 45,
             borderRadius: 35,
             backgroundColor: colors.default
         }}>
@@ -36,6 +71,7 @@ const TabsScreen = () => {
     return (
         <Tab.Navigator tabBarOptions={{
             showLabel: false,
+            keyboardHidesTabBar: true,
             style: {
                 // position: 'absolute',
                 // bottom: 25,
@@ -107,8 +143,8 @@ const TabsScreen = () => {
                         <Image
                             source={require('../../assets/icons/shopping-basket.png')}
                             style={{
-                                height: 30,
-                                width: 30,
+                                height: 20,
+                                width: 20,
                                 tintColor: '#FFF'
                             }}
                         />
@@ -145,7 +181,7 @@ const TabsScreen = () => {
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        {/* <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}> */}
+                            {/* <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}> */}
                             <Image source={require('../../assets/icons/user.png')}
                                 resizeMode="contain"
                                 style={{
@@ -165,11 +201,26 @@ const TabsScreen = () => {
                 }}
             />
 
+
         </Tab.Navigator>
     )
 }
 
-export default TabsScreen;
+
+
+const StackScreen = ({ navigation }) => {
+    return (
+        <Stack.Navigator initialRouteName={'Main'} >
+            <Stack.Screen name="Main" component={TabsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="FoodDetail" component={FoodDetail} options={{ headerShown: false }} />
+            <Stack.Screen name="Address" component={Address} />
+        </Stack.Navigator>
+    )
+}
+export default StackScreen;
+
+
+
 
 const styles = StyleSheet.create({
     shadow: {

@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from 'react-native';
 import TabsScreen from './TabNavigation';
 import { getUserAction } from '../redux/action';
 import { useDispatch } from 'react-redux';
+import StackScreen from './TabNavigation';
 
 
 
@@ -15,7 +16,7 @@ export default function Routes() {
     const [loading, setLoading] = useState(true);
     const [initializing, setInitializing] = useState(true);
     // Handle user state changes
-    console.log('userroutes', user)
+    // console.log('userroutes', user)
     const dispatch = useDispatch()
 
 
@@ -25,7 +26,7 @@ export default function Routes() {
         setLoading(false)
     }
     if (user) {
-        console.log(user.uid)
+        // console.log(user.uid)
         const action = getUserAction(user.uid)
         dispatch(action)
     }
@@ -45,7 +46,7 @@ export default function Routes() {
     }
     return (
         <NavigationContainer>
-            {user ? <TabsScreen /> : <RootStackScreen />}
+            {user ? <StackScreen /> : <RootStackScreen />}
         </NavigationContainer>
     );
 }
