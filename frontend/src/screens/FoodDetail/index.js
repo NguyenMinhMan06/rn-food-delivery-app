@@ -3,7 +3,7 @@ import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpac
 import { colors, fonts } from '../../../assets/style'
 import ListTabSelection from '../../components/ListTabSelection'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { addDays, arrayIsEmpty, dateNow, numberWithCommas } from '../../../utils/function'
+import { addDays, arrayIsEmpty, dateNow, numberWithCommas, objectIsNull } from '../../../utils/function'
 import CommentList from '../../components/CommentList'
 import { TextInput } from 'react-native-gesture-handler'
 import { Rating, AirbnbRating } from 'react-native-ratings';
@@ -14,6 +14,9 @@ import DatePicker from 'react-native-date-picker'
 import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import { addItemFavAction, addToCartAction, removeItemFavAction } from '../../redux/action'
+import firestore from '@react-native-firebase/firestore';
+
+
 
 const COMMENTDATA = {
     numComment: 12,
@@ -131,8 +134,8 @@ const FoodDetail = ({ navigation, route }, props) => {
     const [date, setDate] = useState(new Date())
     const [isFavorite, setIsFavorite] = useState(route.params.isFavorite)
 
-    console.log(route.params)
-    console.log('state on food detail: ', itemFavState)
+    // console.log(route.params)
+    // console.log('state on food detail: ', itemFavState)
 
     const dispatch = useDispatch()
     const onPressTab = (id) => {
@@ -147,6 +150,8 @@ const FoodDetail = ({ navigation, route }, props) => {
         console.log(list)
         setIsSelectedTab(id)
     }
+
+
     const onPressFavorite = (item) => {
         // console.log(item)
         if (isFavorite) {
@@ -169,9 +174,10 @@ const FoodDetail = ({ navigation, route }, props) => {
         }
     }
     const addItemToCartHandler = () => {
-        console.log(route.params.item)
-        const action = addToCartAction(route.params.item)
+        const itemAdd = { item: route.params.item, userId: homeState.response.id }
+        const action = addToCartAction(itemAdd)
         dispatch(action)
+        navigation.navigate('Cart', { timeDelivery: moment(date).format('lll') })
     }
 
     const onConfirmDate = (date) => {
@@ -279,16 +285,29 @@ const FoodDetail = ({ navigation, route }, props) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    {route.params.item.desription &&
+                        <View style={{
+                            padding: '3%',
+                            borderBottomWidth: 1,
+                        }}>
+                            <Text style={{ ...fonts.type1, fontSize: 16, }} numberOfLines={3}>
+                                {route.params.item.desription}
+                            </Text>
+                        </View>
+                    }
                     <View style={{
-                        padding: '3%'
+                        padding: '3%',
+                        borderBottomWidth: 1,
+                        borderColor: colors.grey
                     }}>
                         <Text style={{ ...fonts.type1, fontSize: 16, }} numberOfLines={3}>
-                            Id irure commodo dolore amet proident amet proident velit duis nulla irure ex laboris.
+                            Aliquip officia aliquip laboris nostrud.
                         </Text>
                     </View>
 
 
-                    <View style={{ borderTopWidth: 1, borderBottomWidth: 1, borderColor: colors.grey, padding: '3%' }}>
+
+                    <View style={{ borderBottomWidth: 1, borderColor: colors.grey, padding: '3%' }}>
                         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <FontAwesome5 name={'location-arrow'} size={20} style={{ paddingRight: 10 }} color={'#1a73e8'} />
                             <Text style={{ ...fonts.type1, fontSize: 16, }}>
@@ -305,14 +324,14 @@ const FoodDetail = ({ navigation, route }, props) => {
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: colors.grey, padding: '3%' }}>
                         <View style={{ width: '80%' }}>
-                            <Text style={{ ...fonts.type1, fontWeight: 'bold', fontSize: 18, }}>
+                            <Text style={{ ...fonts.type1, fontWeight: 'bold', fontSize: 18, paddingVertical: 6 }}>
                                 Standal delivery
                             </Text>
-                            <Text style={{ ...fonts.type1, fontSize: 16, }}>
+                            <Text style={{ ...fonts.type1, fontSize: 16, paddingVertical: 4 }}>
                                 Order will be delivery on
                             </Text>
-                            <Text style={{ ...fonts.type1, fontSize: 16, }}>
-                                {moment(date).calendar()}
+                            <Text style={{ ...fonts.type1, fontSize: 16, paddingVertical: 4 }}>
+                                {moment(date).format('lll')}
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{}}>
@@ -344,44 +363,73 @@ const FoodDetail = ({ navigation, route }, props) => {
                             </TouchableOpacity>
 
                         </View>
-                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => {
-                            setSelectedDelivery(1)
-                            setDate(dateNow())
-                            setModalVisible(!modalVisible)
-                        }}>
-                            {selectedDelivery === 1 ? <MaterialIcons name={'radio-button-on'} size={20} color={colors.default} /> : <MaterialIcons name={'radio-button-off'} size={20} />}
-                            <Text>
-                                Delivery now
-                            </Text>
-                            {selectedDelivery === 1 ? null : <MaterialIcons name={'chevron-right'} size={20} />}
+                        <View style={{ padding: '3%' }}>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40, }}
+                                onPress={() => {
+                                    setSelectedDelivery(1)
+                                    setDate(dateNow())
+                                    setModalVisible(!modalVisible)
+                                }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ paddingRight: 10, }}>
+                                        {selectedDelivery === 1 ?
+                                            <MaterialIcons name={'radio-button-on'} size={24} color={colors.default} />
+                                            :
+                                            <MaterialIcons name={'radio-button-off'} size={24} />}
+                                    </View>
+                                    <Text style={{ ...fonts.type1, fontSize: 20, }}>
+                                        Delivery now
+                                    </Text>
+                                </View>
+                                {selectedDelivery === 1 ? null : <MaterialIcons name={'chevron-right'} size={30} />}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40, }}
+                                onPress={() => {
+                                    setSelectedDelivery(2)
+                                    setModalPickTime(!modalPickTime)
+                                    setModalVisible(!modalVisible)
+                                }}
+                            >
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ paddingRight: 10, }}>
+                                        {selectedDelivery === 2 ?
+                                            <MaterialIcons name={'radio-button-on'} size={24} color={colors.default} />
+                                            :
+                                            <MaterialIcons name={'radio-button-off'} size={24} />}
+                                    </View>
+                                    <Text style={{ ...fonts.type1, fontSize: 20, }}>
+                                        Schedule Delivery
+                                    </Text>
+                                </View>
+                                {selectedDelivery === 2 ? null : <MaterialIcons name={'chevron-right'} size={30} />}
 
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row' }}
-                            onPress={() => {
-                                setSelectedDelivery(2)
-                                setModalPickTime(!modalPickTime)
-                                setModalVisible(!modalVisible)
-                            }}
-                        >
-                            {selectedDelivery === 2 ? <MaterialIcons name={'radio-button-on'} size={20} color={colors.default} /> : <MaterialIcons name={'radio-button-off'} size={20} />}
-                            <Text>
-                                Select delivery date
-                            </Text>
-                            {selectedDelivery === 2 ? null : <MaterialIcons name={'chevron-right'} size={20} />}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40, }}
+                                onPress={() => {
+                                    setSelectedDelivery(3)
+                                    setModalPickTime(!modalPickTime)
+                                    setModalVisible(!modalVisible)
+                                }}
+                            >
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ paddingRight: 10, }}>
+                                        {selectedDelivery === 3 ?
+                                            <MaterialIcons name={'radio-button-on'} size={24} color={colors.default} />
+                                            :
+                                            <MaterialIcons name={'radio-button-off'} size={24} />}
+                                    </View>
+                                    <Text style={{ ...fonts.type1, fontSize: 20, }}>
+                                        Pick Up
+                                    </Text>
+                                </View>
+                                {selectedDelivery === 3 ? null : <MaterialIcons name={'chevron-right'} size={30} />}
 
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flexDirection: 'row' }}
-                            onPress={() => {
-                                setSelectedDelivery(3)
-                            }}
-                        >
-                            {selectedDelivery === 3 ? <MaterialIcons name={'radio-button-on'} size={20} color={colors.default} /> : <MaterialIcons name={'radio-button-off'} size={20} />}
-                            <Text>
-                                Delivery now
-                            </Text>
-                            {selectedDelivery === 3 ? null : <MaterialIcons name={'chevron-right'} size={20} />}
+                            </TouchableOpacity>
+                        </View>
 
-                        </TouchableOpacity>
                     </View>
 
                 </View>
@@ -457,7 +505,7 @@ const FoodDetail = ({ navigation, route }, props) => {
             }
 
 
-            <View style={{ justifyContent: "center", alignItems: 'center', position: 'absolute', bottom: 20, width: '100%', }}>
+            <View style={{ justifyContent: "center", alignItems: 'center', position: 'absolute', bottom: 10, width: '100%', }}>
                 {isSelectedTab == 1 &&
 
                     <TouchableOpacity onPress={() => { addItemToCartHandler() }} style={{ width: '94%', marginHorizontal: '3%', justifyContent: 'center', alignItems: 'center', backgroundColor: colors.default, paddingVertical: 10, borderRadius: 10, }}>

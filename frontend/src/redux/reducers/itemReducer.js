@@ -17,7 +17,7 @@ const itemReducer = (state = initialState, action) => {
                 return state
         }
     } catch (error) {
-        console.log('login reducer error', error)
+        console.log('item reducer error', error)
     }
 }
 

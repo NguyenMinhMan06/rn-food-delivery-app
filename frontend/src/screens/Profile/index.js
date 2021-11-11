@@ -6,11 +6,12 @@ import { getUserAction, logOutAction } from '../../redux/action'
 import auth from '@react-native-firebase/auth';
 import { colors, fonts } from '../../../assets/style'
 import FA5 from 'react-native-vector-icons/FontAwesome5'
+import Geocoder from 'react-native-geocoding'
 
 
 const Profile = ({ navigation }) => {
     // const homeState = useSelector(state => state ? state.login.response ? state.login.response : state.register.response : null)
-    const homeState = useSelector(state => state.user.response)
+    const homeState = useSelector(state => state.user)
     console.log('my state user', homeState)
 
     const dispatch = useDispatch()
@@ -28,8 +29,6 @@ const Profile = ({ navigation }) => {
     //     return subscriber; // unsubscribe on unmount
     // }, []);
     // console.log('???', user)
-
-
     const logOutHandler = () => {
         const action = logOutAction()
         dispatch(action)
@@ -62,19 +61,19 @@ const Profile = ({ navigation }) => {
                 </View>
                 <View>
 
-                    <Text style={{ ...fonts.type3, fontWeight: 'bold', paddingBottom: 10, }}>{homeState._data.name ? homeState._data.name : homeState._data.email}</Text>
+                    <Text style={{ ...fonts.type3, fontWeight: 'bold', paddingBottom: 10, }}>{homeState?.response?.name ? homeState?.response?.name : homeState?.response?.email}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <FA5 name={'envelope'} size={18} color={colors.grey} style={{ paddingRight: 6, }} />
-                        <Text style={{ ...fonts.type1, color: colors.grey, width: '100%', paddingBottom: 4, }}> {homeState._data.email}</Text>
+                        <Text style={{ ...fonts.type1, color: colors.grey, width: '100%', paddingBottom: 4, }}> {homeState.response?.email}</Text>
 
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <FA5 name={'phone-alt'} size={18} color={colors.grey} style={{ paddingRight: 6, }} />
-                        <Text style={{ ...fonts.type1, color: colors.grey, width: '100%', paddingBottom: 4, }}> 0984277152</Text>
+                        <Text style={{ ...fonts.type1, color: colors.grey, width: '100%', paddingBottom: 4, }}> {homeState.response?.phoneNumber}</Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <FA5 name={'map-marked-alt'} size={18} color={colors.grey} style={{ paddingRight: 6, }} />
-                        <Text style={{ ...fonts.type1, color: colors.grey, width: '100%', paddingBottom: 4, }}>Ho Chi Minh, Viet Nam</Text>
+                        <Text style={{ ...fonts.type1, color: colors.grey, width: '100%', paddingBottom: 4, }}>{homeState.response?.address}</Text>
                     </View>
                 </View>
 

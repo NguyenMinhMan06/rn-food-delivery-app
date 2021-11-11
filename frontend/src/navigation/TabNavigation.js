@@ -15,6 +15,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Delivery from '../screens/Home/Delivery';
 import TopTab from '../components/TopTab';
 import Address from '../screens/Address'
+import InputPhone from '../screens/PhoneVerify/InputPhone';
+import InputOTP from '../screens/PhoneVerify/InputOTP';
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -214,10 +216,17 @@ const StackScreen = ({ navigation }) => {
             <Stack.Screen name="Main" component={TabsScreen} options={{ headerShown: false }} />
             <Stack.Screen name="FoodDetail" component={FoodDetail} options={{ headerShown: false }} />
             <Stack.Screen name="Address" component={Address} />
+            <Stack.Screen name="VerifyPhone" component={InputPhone}
+                options={{ title: "Verify Phone Number", headerBackTitle: "" }}
+            />
+            <Stack.Screen name="InputOTP" component={InputOTP}
+                options={{ title: "Input OTP", headerBackTitle: "" }}
+            />
         </Stack.Navigator>
     )
 }
 export default StackScreen;
+
 
 
 

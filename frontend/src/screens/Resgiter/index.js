@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
+import { objectIsNull } from '../../../utils/function'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
 import { registerAction } from '../../redux/action'
@@ -13,38 +14,49 @@ const Register = ({ navigation }) => {
         email: '',
         password: '',
         confirm_password: '',
-        name: 'MINH MAN'
+        name: 'Man'
     })
-
+    const [modalVisible, setModalVisible] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
     const dispatch = useDispatch()
     const registerState = useSelector(state => state.register)
+
 
     const registerHandler = () => {
 
         if (data.email.length == 0 || data.password.length == 0 || data.confirm_password.length == 0) {
-            Alert.alert('Wrong Input!', 'field cannot be empty.', [
-                { text: 'Okay' }
-            ]);
+            setErrorMessage('field cannot be empty');
             return;
         }
         if (data.password != data.confirm_password) {
-            Alert.alert('Password does not match', 'Please try again', [{ text: 'Okay' }])
+            setErrorMessage('Password does not match')
             return;
         }
 
+        if (registerState?.response) {
+            setModalVisible(false)
+        }
+        else {
+            setModalVisible(true)
+        }
         const action = registerAction(data.email, data.password, data.name)
         dispatch(action)
     }
 
     useEffect(() => {
-        if (registerState.response === 'auth/email-already-in-use') {
-            alert('Email exist! Please try again')
+        if (registerState?.response) {
+            setModalVisible(false)
         }
-        if (registerState.response === 'auth/invalid-email') {
-            alert('Email Wrong format. Please try again')
+        if (registerState?.response === 'auth/email-already-in-use') {
+            setErrorMessage('Email exist! Please try again')
         }
-        console.log('my register state', registerState)
-    }, [registerState])
+        if (registerState?.response === 'auth/invalid-email') {
+            setErrorMessage('Email Wrong format. Please try again')
+        }
+        if (registerState?.response?.user) {
+            setErrorMessage('')
+        }
+    }, [registerState, registerState.response, modalVisible])
 
 
     return (
@@ -57,6 +69,13 @@ const Register = ({ navigation }) => {
             <Text style={{ ...fonts.type1, paddingBottom: 20, fontSize: 24, color: colors.default }}>
                 Register account
             </Text>
+            <View style={{ height: 20, justifyContent: 'center', alignItems: 'center' }}>
+                {errorMessage != "" &&
+                    <Text style={{ ...fonts.type1, color: 'red' }}>
+                        {errorMessage}
+                    </Text>
+                }
+            </View>
             <FormInput
                 labelValue={data.username}
                 onChangeText={(val) => { setData({ ...data, email: val }) }}
@@ -124,6 +143,18 @@ const Register = ({ navigation }) => {
                     }}><Text style={{ ...fonts.type3, color: "#2e64e5" }} >Login here</Text>
                 </TouchableOpacity>
             </View>
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+
+            >
+                <View style={{ justifyContent: 'flex-end', height: windowHeight, justifyContent: 'center', alignItems: 'center', backgroundColor: modalVisible ? 'rgba(0,0,0,0.5)' : '' }}>
+                    <View style={{ height: windowHeight / 6, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', width: windowWidth / 3 }}>
+                        <ActivityIndicator size="large" color="grey" />
+                    </View>
+                </View>
+
+            </Modal>
 
         </ScrollView>
 

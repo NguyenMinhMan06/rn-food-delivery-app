@@ -2,7 +2,6 @@ import { GET_ITEM_CAT_FAIL, GET_ITEM_CAT_SUCCESS, GET_ITEM_FAIL, GET_ITEM_SUCCES
 
 const initialState = {
     isLoading: true,
-    idFirstCat: null
 }
 
 const itemCatReducer = (state = initialState, action) => {
@@ -18,7 +17,7 @@ const itemCatReducer = (state = initialState, action) => {
                 return state
         }
     } catch (error) {
-        console.log('login reducer error', error)
+        console.log('cat reducer error', error)
     }
 }
 

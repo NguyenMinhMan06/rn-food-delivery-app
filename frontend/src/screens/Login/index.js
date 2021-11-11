@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
+import { objectIsNull } from '../../../utils/function'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
 import { loginAction } from '../../redux/action'
@@ -13,7 +14,12 @@ const Login = ({ navigation }) => {
         email: '',
         password: '',
     })
-    const loginState = useSelector(state => state.login.response)
+    const loginState = useSelector(state => state.login)
+    const [erroMessage, setErroMessage] = useState('')
+    const [modalVisible, setModalVisible] = useState(false);
+    // console.log('state login here:           ', loginState.response)
+
+    // console.log('login state', loginState)
 
     const dispatch = useDispatch()
 
@@ -23,29 +29,32 @@ const Login = ({ navigation }) => {
         // });
 
         if (email.length == 0 || password.length == 0) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                { text: 'Okay' }
-            ]);
+            setErroMessage('Please input your email and password')
             return;
         }
-
+        setModalVisible(true)
+        if (loginState?.response === "auth/user-not-found" || loginState?.response === "auth/invalid-email" || loginState?.response === "auth/wrong-password") {
+            setErroMessage('account/password not correct')
+            setModalVisible(false)
+        }
         const action = loginAction(email, password)
         dispatch(action)
-
     }
 
     useEffect(() => {
-        if (loginState === "auth/user-not-found") {
-            alert('Email dont exist')
+        if (loginState.response === "auth/user-not-found" || loginState.response === "auth/invalid-email" || loginState.response === "auth/wrong-password") {
+
+            setErroMessage('account/password not correct')
+            setModalVisible(false)
         }
-        if (loginState === "auth/invalid-email") {
-            alert('Wrong format')
+        if (!objectIsNull(loginState.response)) {
+            if (!objectIsNull(loginState.response.user)) {
+                setModalVisible(false)
+                setErroMessage('')
+                // navigation.navigate("VerifyPhone")
+            }
         }
-        if (loginState === "auth/wrong-password") {
-            alert('wrong pass')
-        }
-        console.log('my state login', loginState)
-    }, [loginState])
+    }, [loginState, loginState.response])
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -57,6 +66,26 @@ const Login = ({ navigation }) => {
             <Text style={{ ...fonts.type1, fontStyle: 'italic', paddingBottom: 20, fontSize: 24, color: colors.default }}>
                 Pho-My Food
             </Text>
+            <View style={{ height: 20, justifyContent: 'center', alignItems: 'center' }}>
+                {erroMessage != "" &&
+                    <Text style={{ ...fonts.type1, color: 'red' }}>
+                        {erroMessage}
+                    </Text>
+                }
+            </View>
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+
+            >
+                <View style={{ justifyContent: 'flex-end', height: windowHeight, justifyContent: 'center', alignItems: 'center', backgroundColor: modalVisible ? 'rgba(0,0,0,0.5)' : '' }}>
+                    <View style={{ height: windowHeight / 6, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', width: windowWidth / 3 }}>
+                        <ActivityIndicator size="large" color="grey" />
+                    </View>
+                </View>
+
+            </Modal>
+
             <FormInput
                 labelValue={data.email}
                 onChangeText={(val) => { setData({ ...data, email: val }) }}

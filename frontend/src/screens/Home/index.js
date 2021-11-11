@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, PermissionsAndroid, Animated, Keyboard } from 'react-native'
+import { ActivityIndicator, Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, PermissionsAndroid, Animated, Keyboard, Modal } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler'
 import { categoryList, foodList, resLocation } from '../../../assets/Data/FlatlistCategory'
-import { arrayIsEmpty } from '../../../utils/function'
+import { arrayIsEmpty, objectIsNull } from '../../../utils/function'
 import Carousel from 'react-native-snap-carousel'
 import CartList from '../../components/CartList'
 import ListTabSelection from '../../components/ListTabSelection'
@@ -14,10 +14,11 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'; 
 import Geolocation from 'react-native-geolocation-service';
 import polyline from '@mapbox/polyline'
 import SearchDropDown from '../../components/SearchDropDown'
+import auth from '@react-native-firebase/auth';
 
-import firestore from '@react-native-firebase/firestore';
 import { foodItem } from '../../redux/middleware/Firestore'
-import { getItemAction, getItemCatAction, getItemFavAction } from '../../redux/action'
+import { addLocationUserAction, getItemAction, getItemCartAction, getItemCatAction, getItemFavAction } from '../../redux/action'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
 
@@ -27,9 +28,8 @@ const Home = ({ navigation }) => {
     const itemState = useSelector(state => state.item)
     const catState = useSelector(state => state.itemCat)
     const itemFavState = useSelector(state => state.itemFav)
+    const cartItem = useSelector(state => state.cartItem)
 
-    const [flag, setFlag] = useState(false)
-    const [list, setList] = useState()
     const [isSelectedTab, setIsSelectedTab] = useState(1)
     const [listTab, setListTab] = useState([
         {
@@ -53,6 +53,7 @@ const Home = ({ navigation }) => {
     })
     const [locations, setLocations] = useState(resLocation)
     const [granted, setGranted] = useState()
+    const [modalVisible, setModalVisible] = useState(false)
 
     const _map = useRef(null)
     const _scrollView = useRef(null)
@@ -76,14 +77,15 @@ const Home = ({ navigation }) => {
 
     // run to fetch data
     useEffect(() => {
+        if (auth().currentUser?.phoneNumber == null) {
+            setModalVisible(true)
+        }
         locationPermission()
         const action1 = getItemAction()
         const action2 = getItemCatAction()
         dispatch(action1)
         dispatch(action2)
-
     }, [])
-
 
     async function mergeCoords() {
         const {
@@ -147,7 +149,7 @@ const Home = ({ navigation }) => {
                 // console.log("You can use the location")
                 setGranted(true)
                 Geolocation.getCurrentPosition((pos) => {
-                    console.log('pos:              ', pos.coords)
+                    console.log('pos:              ', pos)
                     setPin({
                         latitude: pos.coords.latitude,
                         longitude: pos.coords.longitude,
@@ -231,7 +233,6 @@ const Home = ({ navigation }) => {
     const [listCategory, setListCategory] = useState(null)
     const [idSelected, setIdSelected] = useState(-1)
     const [listSelection, setListSelection] = useState(null)
-    const [favList, setFavList] = useState(null)
 
     // run after dispatch action complete
     useEffect(() => {
@@ -241,7 +242,7 @@ const Home = ({ navigation }) => {
             setListSelection(itemState.response)
             // setFavList(itemFavState.response)
         }
-    }, [catState])
+    }, [catState, itemState])
 
     const onPressFoodItem = (item) => {
         // console.log('homeitem: ', item)
@@ -252,7 +253,22 @@ const Home = ({ navigation }) => {
     useEffect(() => {
         if (!homeState.isLoading) {
             const action = getItemFavAction(homeState.response.id)
+            const action1 = getItemCartAction(homeState.response.id)
             dispatch(action)
+            dispatch(action1)
+            if (homeState.response.coords?.latitude != null) {
+                setPin({
+                    ...pin,
+                    longitude: homeState.response.coords.longitude,
+                    latitude: homeState.response.coords.latitude
+                })
+            }
+            else {
+                const data = { coords: { latitude: pin.latitude, longitude: pin.longitude }, userId: homeState.response.id }
+                console.log(data)
+                const action2 = addLocationUserAction(data)
+                dispatch(action2)
+            }
         }
     }, [homeState])
 
@@ -264,7 +280,6 @@ const Home = ({ navigation }) => {
     //check category of user on press, will render the other food item
     useEffect(() => {
         if (!arrayIsEmpty(listFood)) {
-            console.log('useeffect idselected', idSelected)
             if (idSelected != -1) {
                 const newList = [];
                 const indexId = listCategory[idSelected].id
@@ -304,10 +319,42 @@ const Home = ({ navigation }) => {
     }
 
     const __scrollView = useRef(null)
-    if (itemState.isLoading || catState.isLoading || homeState.isLoading) {
+    if (itemState.isLoading || catState.isLoading || homeState.isLoading || cartItem.isLoading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
-                <ActivityIndicator size="large" color="grey" />
+                <Modal
+                    transparent={true}
+                    visible={true}
+                >
+                    <View style={{
+                        justifyContent: 'flex-end',
+                        height: windowHeight,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                    }}>
+                        <View style={{
+                            height: windowHeight / 6,
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            backgroundColor: '#fff',
+                            width: windowWidth / 1.5
+                        }}>
+                            <View style={{
+                                width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', padding: '3%', borderBottomWidth: 1, borderColor: '#adaba3'
+                            }}>
+                                <Text style={{ ...fonts.type1, fontSize: 20, fontWeight: 'bold' }}>
+                                    Loading data please wait...
+                                </Text>
+                            </View>
+                            <View style={{ padding: 20 }}>
+                                <ActivityIndicator size="large" color="grey" />
+
+                            </View>
+                        </View>
+                    </View>
+
+                </Modal>
             </View>
         );
     }
@@ -338,7 +385,7 @@ const Home = ({ navigation }) => {
                     <View style={{ flex: 4 }}>
                         <CarouselAutoPlay
                             reff={ref}
-                            data={[{ id: 1, title: 'helloworld' }, { id: 2, title: 'helloworld2' }, { id: 3, title: 'helloworld3' }]}
+                            data={[{ id: 1, title: 'FRIDAY FUNDAY', des: 'FREE SHIP FOR DEAL ABOVE', des2: ' 200K' }, { id: 2, title: 'helloworld2' }, { id: 3, title: 'helloworld3' }]}
                         />
                     </View>
                     <View style={{ flex: 15, width: '100%', }}>
@@ -417,7 +464,7 @@ const Home = ({ navigation }) => {
 
                         {!arrayIsEmpty(listSelection) && (
                             <View style={{ flex: 1 }}>
-                                <CartList reff={__scrollView} favList={favList} data={listSelection} onPressFoodItem={onPressFoodItem} seeMore={true} horizontal={true} />
+                                <CartList reff={__scrollView} data={listSelection} onPressFoodItem={onPressFoodItem} seeMore={true} horizontal={true} />
                             </View>
                         )}
                     </View>
@@ -581,6 +628,47 @@ const Home = ({ navigation }) => {
                     </View>
 
             }
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+
+            >
+                <View style={{ justifyContent: 'flex-end', height: windowHeight, justifyContent: 'center', alignItems: 'center', backgroundColor: modalVisible ? 'rgba(0,0,0,0.5)' : '' }}>
+                    <View style={{
+                        height: windowHeight / 6,
+                        alignItems: 'center',
+                        backgroundColor: '#fff',
+                        width: windowWidth / 1.5
+                    }}>
+                        <View style={{
+                            width: '100%', justifyContent: 'center', alignItems: 'center', padding: '3%', borderBottomWidth: 1, borderColor: '#adaba3'
+                        }}>
+                            <Text style={{ ...fonts.type1, fontSize: 20, fontWeight: 'bold' }}>
+                                Confirm your information
+                            </Text>
+                        </View>
+                        <View style={{
+                            width: '100%',
+                            justifyContent: 'center', alignItems: 'center',
+                            margin: 10,
+                        }}>
+                            <View style={{ padding: 12, backgroundColor: colors.default, }}>
+                                <TouchableOpacity onPress={() => {
+                                    setModalVisible(false)
+                                    navigation.replace('VerifyPhone')
+                                }}
+                                >
+                                    <Text style={{ ...fonts.type1, fontSize: 18, color: '#fff' }}>
+                                        Verify Phone Number
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    </View>
+                </View>
+
+            </Modal>
 
 
         </SafeAreaView >
@@ -601,13 +689,13 @@ const CarouselAutoPlay = (props) => {
                 <ImageBackground style={{ width: '100%', height: '100%', flexDirection: 'row' }} imageStyle={{ borderRadius: 14 }} source={require('../../../assets/images/bg_linear1.png')} >
                     <View style={{ width: '60%', paddingLeft: 20, paddingTop: 4 }}>
                         <Text style={{ color: '#fff', fontSize: 20 }}>
-                            Today Promotion
-                        </Text>
-                        <Text style={{ fontStyle: 'italic', paddingVertical: 4, color: '#fff' }}>
                             {item.title}
                         </Text>
                         <Text style={{ color: '#fff' }}>
-                            Use this promo to get 10% off for {item.title}
+                            {item.des}
+                        </Text>
+                        <Text style={{ ...fonts.type1, fontSize: 40, color: colors.default }}>
+                            {item.des2}
                         </Text>
                     </View>
                     <View style={{ width: '40%', justifyContent: 'flex-start', height: '90%' }}>
@@ -615,7 +703,7 @@ const CarouselAutoPlay = (props) => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: '10%' }}>
                             <FontAwesome5Icon name={'chevron-right'} size={14} color="#fff" />
                             <Text style={{ color: '#fff' }}>
-                                {"  "}ORDER NOW
+                                {"  "} SUPPER FRIDAY
                             </Text>
                         </View>
 

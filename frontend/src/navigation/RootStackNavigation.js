@@ -6,12 +6,17 @@ import Register from '../screens/Resgiter';
 import Home from '../screens/Home';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import OnboardingScreen from '../screens/OnboardingScreen';
+import InputPhone from '../screens/PhoneVerify/InputPhone';
+import InputOTP from '../screens/PhoneVerify/InputOTP';
+import { useSelector } from 'react-redux';
 
 const RootStack = createStackNavigator();
 
 const RootStackScreen = ({ navigation }) => {
     const [isFirstLaunch, setIsFirstLaunch] = useState(null);
     let routeName;
+    // const loginState = useSelector(state => state.login.response)
+    // console.log('root stack', loginState)
 
 
     useEffect(() => {
@@ -31,7 +36,7 @@ const RootStackScreen = ({ navigation }) => {
     } else if (isFirstLaunch == true) {
         routeName = 'Onboarding';
     } else {
-        routeName = 'Onboarding';
+        routeName = 'SignInScreen';
     }
 
     return (
@@ -42,6 +47,7 @@ const RootStackScreen = ({ navigation }) => {
             />
             <RootStack.Screen name="SignInScreen" component={Login} />
             <RootStack.Screen name="SignUpScreen" component={Register} />
+            
         </RootStack.Navigator>
     )
 }

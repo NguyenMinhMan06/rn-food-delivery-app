@@ -23,7 +23,11 @@ const CartList = (props) => {
                 }}
         >
             {props.data.map((item, index) => {
-                return <CartItem {...props} key={item.id} item={item} styleCartItem={props.styleCartItem} />
+                if (index >= 7) return
+                else {
+                    return <CartItem {...props} key={item.id} item={item} styleCartItem={props.styleCartItem} />
+
+                }
             })}
         </ScrollView>
     )

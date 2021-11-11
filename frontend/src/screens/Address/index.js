@@ -3,11 +3,13 @@ import { PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 're
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import Geolocation from 'react-native-geolocation-service';
 import { colors, fonts } from '../../../assets/style';
+import { useDispatch } from 'react-redux';
 
 const Address = ({ navigation, route }) => {
     console.log(route.params)
     const [region, setRegion] = useState(route.params.pin)
     const [granted, setGranted] = useState(route.params.granted)
+    const dispatch = useDispatch()
 
     async function locationPermission() {
         try {
@@ -37,6 +39,11 @@ const Address = ({ navigation, route }) => {
             console.warn(err)
         }
     }
+    const onPressUpdateLocation = () => {
+        // const action = addLocationUserAction(data)
+        // dispatch(action)
+
+    }
 
     useEffect(() => {
         if (route.params.pin.latitude == null) locationPermission()
@@ -57,17 +64,16 @@ const Address = ({ navigation, route }) => {
 
     return (
         <View style={{ flex: 1, }}>
-            <View style={{ flex: 1, }}>
+            <View style={{ flex: 1, width: '100%', padding: '3%', height: 400, }}>
                 <GooglePlacesAutocomplete
                     placeholder='Search'
                     fetchDetails={true}
+                    onFail={error => console.error(error)}
                     GooglePlacesSearchQuery={{
                         rankby: 'distance'
                     }}
                     onPress={(data, details = null) => {
                         // 'details' is provided when fetchDetails = true
-                        console.log(data, details);
-                        console.log('dataaaaaaaaaaaa:      ', data)
                         setRegion({
                             ...region,
                             latitude: details.geometry.location.lat,
@@ -75,17 +81,27 @@ const Address = ({ navigation, route }) => {
                         })
                     }}
                     query={{
-                        key: 'AIzaSyDqKrIUwkzhnJ9HZuIp9mxYP_pBD1XQTH8',
+                        key: 'AIzaSyC2ZpQKR3DYiAYB8FOcoQrJi-5cf727rbQ',
                         language: 'en',
                         components: 'country:vn',
                         type: 'establishment',
                     }}
                 />
             </View>
-            <View style={{ flex: 1, }}>
+            <View style={{ width: '100%', padding: '3%' }}>
                 <Text>
-                    Your current location:
+                    Your location {region.latitude}   {"  "}  {region.longitude}
                 </Text>
+                <View style={{ padding: 10, backgroundColor: colors.default, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => {
+                        onPressUpdateLocation()
+                    }}>
+                        <Text>
+                            Save location
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
 
         </View>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { AuthContext } from '../../navigation/AuthProvider'
 import { addToCartAction, getCartItemAction, getUserAction, logOutAction, removeFromCart } from '../../redux/action'
@@ -10,18 +10,24 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { colors, fonts } from '../../../assets/style'
 import { arrayIsEmpty, numberWithCommas } from '../../../utils/function'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import moment from 'moment'
 
 
-const Cart = ({ navigation }) => {
+const Cart = ({ navigation, route }) => {
     const cartItem = useSelector(state => state.cartItem)
+    const homeState = useSelector(state => state.user)
     console.log(cartItem)
     const [totalCartPrice, setTotalCartPrice] = useState(0)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [timer, setTimer] = useState(moment(new Date()).format('lll'))
+
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        const action = getCartItemAction()
-        dispatch(action)
-    }, [])
+    // useEffect(() => {
+    //     const action = getCartItemAction()
+    //     dispatch(action)
+    // }, [])
 
     // useEffect(() => {
     //     if (user) {
@@ -30,23 +36,39 @@ const Cart = ({ navigation }) => {
     //         dispatch(action)
     //     }
     // }, [user])
-    const onPressRemoveFromCart = (cartItem) => {
-        const action = removeFromCart(cartItem)
+    const onPressRemoveFromCart = (item) => {
+        console.log(item)
+        const itemRemove = { item: item, userId: homeState.response.id }
+        const action = removeFromCart(itemRemove)
+        dispatch(action)
+
+    }
+
+    const onPressAddToCart = (item) => {
+        console.log(item)
+        const itemAdd = { item: item, userId: homeState.response.id }
+        const action = addToCartAction(itemAdd)
         dispatch(action)
     }
-    const onPressAddToCart = (cartItem) => {
-        const action = addToCartAction(cartItem)
-        dispatch(action)
-    }
+
     useEffect(() => {
-        if (cartItem) {
-            let total = 0;
-            for (let index = 0; index < cartItem.length; index++) {
-                total = total + cartItem[index].price * cartItem[index].quantity
+        if (route.params) {
+            if (!(route.params.timeDelivery == undefined)) {
+                setTimer(route.params.timeDelivery)
             }
-            console.log(total)
+        }
+    }, [route.params])
+
+    useEffect(() => {
+        if (!arrayIsEmpty(cartItem.response)) {
+            let total = 0;
+            const item = cartItem.response
+            for (let index = 0; index < item.length; index++) {
+                total = total + item[index].price * item[index].quantity
+            }
             setTotalCartPrice(total);
         }
+
 
     }, [cartItem])
 
@@ -64,8 +86,8 @@ const Cart = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            {!arrayIsEmpty(cartItem) ?
-                <ScrollView style={{ width: '100%', paddingBottom: 90 }}>
+            {!arrayIsEmpty(cartItem.response) ?
+                <ScrollView style={{ width: '100%', }}>
                     <TouchableOpacity style={{ justifyContent: 'flex-start', width: '100%', paddingHorizontal: '3%', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.grey, paddingBottom: 20, }}>
                         <View style={{ flexDirection: 'row' }}>
                             <Ionicons name={'location-outline'} size={20} color={colors.default} style={{ paddingRight: 10, }} />
@@ -74,10 +96,10 @@ const Cart = ({ navigation }) => {
                                     Delivery address
                                 </Text>
                                 <Text style={{ ...fonts.type1 }}>
-                                    username - phone
+                                    {homeState.response.name} - {homeState.response.phoneNumber}
                                 </Text>
                                 <Text style={{ ...fonts.type1 }}>
-                                    location
+                                    {homeState.response.address}
                                 </Text>
                             </View>
                         </View>
@@ -87,14 +109,14 @@ const Cart = ({ navigation }) => {
                             <Ionicons name={'time-outline'} size={20} color={colors.default} style={{ paddingRight: 10, }} />
                             <View>
                                 <Text>
-                                    Delivery - Tiimer - Day DD/MM
+                                    Delivery - {timer}
                                 </Text>
                             </View>
                         </View>
                     </TouchableOpacity>
 
                     <CartRenderItem
-                        data={cartItem}
+                        data={cartItem.response}
                         onPressRemove={onPressRemoveFromCart}
                         onPressAdd={onPressAddToCart}
                     />
@@ -125,6 +147,9 @@ const Cart = ({ navigation }) => {
                         </View>
 
                     </View>
+                    <View style={{ height: 50 }}>
+
+                    </View>
                 </ScrollView>
                 :
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} key={0}>
@@ -141,14 +166,40 @@ const Cart = ({ navigation }) => {
 
             }
 
-            {!arrayIsEmpty(cartItem) &&
-                <TouchableOpacity style={{ position: 'absolute', bottom: 10, backgroundColor: 'cyan', width: '94%', marginHorizontal: '3%', alignItems: 'center', backgroundColor: colors.default, paddingVertical: 10, }}>
+            {!arrayIsEmpty(cartItem.response) &&
+                <TouchableOpacity
+                    onPress={() => { setModalVisible(!modalVisible) }}
+                    style={{ position: 'absolute', bottom: 10, backgroundColor: 'cyan', width: '94%', marginHorizontal: '3%', alignItems: 'center', backgroundColor: colors.default, paddingVertical: 10, }}>
                     <Text style={{ ...fonts.type1, fontSize: 18, color: '#fff', fontWeight: 'bold' }}>
                         Checkout - {totalCartPrice} VNĐ
                     </Text>
                 </TouchableOpacity>
 
             }
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={{ justifyContent: 'flex-end', height: windowHeight, backgroundColor: modalVisible ? 'rgba(0,0,0,0.5)' : '' }}>
+                    <View style={{ height: windowHeight / 2, backgroundColor: '#fff', }}>
+                        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', padding: '3%', borderBottomWidth: 1, borderColor: '#adaba3' }}>
+                            <Text style={{ ...fonts.type1, fontSize: 24, fontWeight: 'bold' }}>
+                                Confirm your order
+                            </Text>
+                            <TouchableOpacity style={{ position: 'absolute', right: '3%' }} onPress={() => { setModalVisible(!modalVisible) }}>
+                                <AntDesign name={'close'} size={26} color={'#8f9094'} />
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+
+                </View>
+
+            </Modal>
 
         </SafeAreaView>
 

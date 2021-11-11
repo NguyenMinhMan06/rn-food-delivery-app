@@ -1,4 +1,4 @@
-import { GET_USER_FAIL, GET_USER_SUCCESS, } from "../action/actionType";
+import { ADD_LOCATION_SUCCESS, ADD_USERPHONE_SUCCESS, GET_USER_FAIL, GET_USER_SUCCESS, LOGOUT_SUCCESS, } from "../action/actionType";
 
 const initialState = {
     isLoading: true
@@ -13,6 +13,12 @@ const userReducer = (state = initialState, action) => {
             case GET_USER_FAIL:
                 const error = action.error
                 return { ...state, isLoading: false, error: error }
+            case ADD_LOCATION_SUCCESS:
+                return { ...state, isLoading: false, response: { ...state.response, coords: response.coords, address: response.address } }
+            case ADD_USERPHONE_SUCCESS:
+                return { ...state, isLoading: false, response: { ...state.response, phoneNumber: response } }
+            case LOGOUT_SUCCESS:
+                return state = initialState
             // case REGISTER_SUCCESS:
             //     const newRegister = action.response
             //     return login = newRegister
@@ -25,7 +31,7 @@ const userReducer = (state = initialState, action) => {
                 return state
         }
     } catch (error) {
-        console.log('login reducer error', error)
+        console.log('user reducer error', error)
     }
 }
 

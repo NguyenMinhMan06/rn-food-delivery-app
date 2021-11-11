@@ -1,4 +1,5 @@
 import moment from "moment";
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 
 export const objectIsNull = object => {
   if (object === null || object === undefined) {
@@ -29,3 +30,14 @@ export const dateNow = () => {
 export const numberWithCommas = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+export const showToast = (message) => {
+    return (
+        ToastAndroid.showWithGravity(
+            message,
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM
+        )
+    )
+};
+

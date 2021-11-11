@@ -27,7 +27,6 @@ const Discover = ({ navigation, route }) => {
     }, [itemState])
 
     useEffect(() => {
-        // console.log(!arrayIsEmpty(allProduct))
         if (!objectIsNull(route.params)) {
             const newData = itemState.response.filter(i => {
                 return i.catName.toLowerCase().includes(route.params.typeName.toLowerCase())
@@ -40,8 +39,6 @@ const Discover = ({ navigation, route }) => {
     const searchProductFilter = (textToSearch) => {
         if (textToSearch) {
             const newData = allProduct.filter(i => {
-                // console.log(i.name + '                 ' + i.name.includes(textToSearch))
-                // return i.foodName.toLowerCase().includes(textToSearch.toLowerCase()) || i.catName.toLowerCase().includes(textToSearch.toLowerCase())
                 return i.foodName.toLowerCase().includes(textToSearch.toLowerCase()) || i.catName.toLowerCase().includes(textToSearch.toLowerCase())
             })
             setProductFiltered(newData)

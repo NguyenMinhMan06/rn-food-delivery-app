@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import RootStackScreen from './RootStackNavigation';
-import HomeNavigation from './HomeNavigation';
 import auth from '@react-native-firebase/auth';
 import { ActivityIndicator, View } from 'react-native';
 import TabsScreen from './TabNavigation';
 import { getUserAction } from '../redux/action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import StackScreen from './TabNavigation';
+import VerifyNavigation from './VerifyNavigation';
+import AdminNavigation from './AdminNavigation';
 
 
 
@@ -15,8 +16,10 @@ export default function Routes() {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(true);
     const [initializing, setInitializing] = useState(true);
+    const userState = useSelector(state => state.user)
     // Handle user state changes
-    // console.log('userroutes', user)
+    console.log('userroutes', user)
+    console.log('userState:', userState)
     const dispatch = useDispatch()
 
 
@@ -25,14 +28,17 @@ export default function Routes() {
         if (initializing) setInitializing(false);
         setLoading(false)
     }
-    if (user) {
-        // console.log(user.uid)
-        const action = getUserAction(user.uid)
-        dispatch(action)
-    }
 
     useEffect(() => {
-        
+        if (user?.uid) {
+            // console.log(user.uid)
+            const action = getUserAction(user.uid)
+            dispatch(action)
+        }
+    }, [user])
+
+    useEffect(() => {
+
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; // unsubscribe on unmount
     }, []);
@@ -44,9 +50,10 @@ export default function Routes() {
             </View>
         );
     }
+
     return (
         <NavigationContainer>
-            {user ? <StackScreen /> : <RootStackScreen />}
+            {user ? userState?.response?.role ? <AdminNavigation /> : <StackScreen /> : <RootStackScreen />}
         </NavigationContainer>
     );
 }
