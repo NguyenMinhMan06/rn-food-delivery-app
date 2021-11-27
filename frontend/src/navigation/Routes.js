@@ -18,8 +18,8 @@ export default function Routes() {
     const [initializing, setInitializing] = useState(true);
     const userState = useSelector(state => state.user)
     // Handle user state changes
-    console.log('userroutes', user)
-    console.log('userState:', userState)
+    // console.log('userroutes', user)
+    // console.log('userState:', userState)
     const dispatch = useDispatch()
 
 
@@ -51,9 +51,17 @@ export default function Routes() {
         );
     }
 
+    if (userState.response?.role === 'admin' || userState.response?.role === 'manager') {
+        return (
+            <NavigationContainer>
+                <AdminNavigation />
+            </NavigationContainer>
+        )
+    }
+
     return (
         <NavigationContainer>
-            {user ? userState?.response?.role ? <AdminNavigation /> : <StackScreen /> : <RootStackScreen />}
+            {user ? <StackScreen /> : <RootStackScreen />}
         </NavigationContainer>
     );
 }

@@ -22,9 +22,11 @@ export const User = {
                 console.log('resposne API', response.user.uid)
                 firestore().collection('users').doc(response.user.uid).set({
                     email: userInfo.data.email,
-                    role: null,
+                    role: '',
                     name: userInfo.data.name,
-                    phoneNumber: response.user.phoneNumber
+                    phoneNumber: response.user.phoneNumber,
+                    avatar: '',
+                    branch: ''
                 }).then(() => { console.log('firestore added user completed') })
                 return response
             }).catch(error => {

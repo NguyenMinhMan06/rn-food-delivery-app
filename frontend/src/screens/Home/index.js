@@ -17,7 +17,7 @@ import SearchDropDown from '../../components/SearchDropDown'
 import auth from '@react-native-firebase/auth';
 
 import { foodItem } from '../../redux/middleware/Firestore'
-import { addLocationUserAction, getItemAction, getItemCartAction, getItemCatAction, getItemFavAction } from '../../redux/action'
+import { addLocationUserAction, getItemAction, getItemCartAction, getItemCatAction, getItemFavAction, getLocationListAction } from '../../redux/action'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
@@ -28,7 +28,8 @@ const Home = ({ navigation }) => {
     const itemState = useSelector(state => state.item)
     const catState = useSelector(state => state.itemCat)
     const itemFavState = useSelector(state => state.itemFav)
-    const cartItem = useSelector(state => state.cartItem)
+    // const cartItem = useSelector(state => state.cartItem)
+    const locList = useSelector(state => state.locList)
 
     const [isSelectedTab, setIsSelectedTab] = useState(1)
     const [listTab, setListTab] = useState([
@@ -49,7 +50,7 @@ const Home = ({ navigation }) => {
     })
     const [desLocation, setDesLocation] = useState({
         desLatitude: null,
-        desLongtitude: null,
+        desLongitude: null,
     })
     const [locations, setLocations] = useState(resLocation)
     const [granted, setGranted] = useState()
@@ -83,8 +84,10 @@ const Home = ({ navigation }) => {
         locationPermission()
         const action1 = getItemAction()
         const action2 = getItemCatAction()
+        const action3 = getLocationListAction()
         dispatch(action1)
         dispatch(action2)
+        dispatch(action3)
     }, [])
 
     async function mergeCoords() {
@@ -253,9 +256,9 @@ const Home = ({ navigation }) => {
     useEffect(() => {
         if (!homeState.isLoading) {
             const action = getItemFavAction(homeState.response.id)
-            const action1 = getItemCartAction(homeState.response.id)
+            // const action1 = getItemCartAction(homeState.response.id)
             dispatch(action)
-            dispatch(action1)
+            // dispatch(action1)
             if (homeState.response.coords?.latitude != null) {
                 setPin({
                     ...pin,
@@ -318,10 +321,12 @@ const Home = ({ navigation }) => {
 
     }
 
+    // console.log(cartItem)
+
     const __scrollView = useRef(null)
-    if (itemState.isLoading || catState.isLoading || homeState.isLoading || cartItem.isLoading) {
+    if (itemState.isLoading || catState.isLoading || homeState.isLoading || locList.isLoading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
                 <Modal
                     transparent={true}
                     visible={true}
@@ -367,6 +372,7 @@ const Home = ({ navigation }) => {
                     <TouchableOpacity style={{
                         flex: 1,
                     }}
+                        disabled
                         onPress={() => navigation.navigate("Address", { granted: granted, pin: pin })}
                     >
                         <View style={{
@@ -379,13 +385,15 @@ const Home = ({ navigation }) => {
                         }}>
                             {/* <FontAwesome5Icon style={{ paddingRight: '2%' }} name={'map-marker-alt'} size={20} color={'#e32f45'} /> */}
                             <Text style={{ ...fonts.type1, fontSize: 16 }} numberOfLines={1}>Right now ● <Text style={{ fontWeight: 'bold' }}> TP. Ho Chi Minh</Text>  </Text>
-                            <FontAwesome5Icon name={'angle-down'} size={18} />
+
                         </View>
                     </TouchableOpacity>
                     <View style={{ flex: 4 }}>
                         <CarouselAutoPlay
                             reff={ref}
-                            data={[{ id: 1, title: 'FRIDAY FUNDAY', des: 'FREE SHIP FOR DEAL ABOVE', des2: ' 200K' }, { id: 2, title: 'helloworld2' }, { id: 3, title: 'helloworld3' }]}
+                            data={[{ id: 1, title: 'Frenzy Friday', des: 'Freeship for drink deals above', des2: ' 80.000 VND' },
+                            { id: 2, title: 'Black Friday', des: 'Free ship for all deal and 15% OFF' }]
+                            }
                         />
                     </View>
                     <View style={{ flex: 15, width: '100%', }}>

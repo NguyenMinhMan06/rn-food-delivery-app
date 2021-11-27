@@ -18,6 +18,21 @@ export function* getItem() {
   }
 }
 
+export function* addItem(action) {
+  try {
+    // In ra các data được dispatch qua action
+    const state = yield select()
+    console.log('itemadd state-- ', state)
+    // In ra các data đang có trong store
+    const response = yield call(Firestore.foodItem.addFoodItem, action);
+    yield put({ type: ActionTypes.ADD_ITEM_SUCCESS, response })
+  } catch (error) {
+    console.log('itemSaga', error)
+    yield put({ type: ActionTypes.GET_ITEM_FAIL, error })
+  }
+}
+
+
 export function* getItemCat() {
   try {
     // In ra các data được dispatch qua action
@@ -58,7 +73,7 @@ export function* addItemFav(action) {
     console.log('itemSaga', error)
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_FAIL, error })
   }
-} 
+}
 
 export function* removeItemFav(action) {
   try {
@@ -72,4 +87,4 @@ export function* removeItemFav(action) {
     console.log('itemSaga', error)
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_FAIL, error })
   }
-} 
+}

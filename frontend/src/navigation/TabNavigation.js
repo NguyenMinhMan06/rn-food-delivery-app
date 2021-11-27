@@ -17,6 +17,10 @@ import TopTab from '../components/TopTab';
 import Address from '../screens/Address'
 import InputPhone from '../screens/PhoneVerify/InputPhone';
 import InputOTP from '../screens/PhoneVerify/InputOTP';
+import ChangePassword from '../screens/Profile/ChangePassword';
+import About from '../screens/Profile/About';
+import HistoryOrder from '../screens/Cart/HistoryOrder';
+import HistoryOrderDetail from '../screens/Cart/HistoryOrderDetail';
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -221,6 +225,18 @@ const StackScreen = ({ navigation }) => {
             />
             <Stack.Screen name="InputOTP" component={InputOTP}
                 options={{ title: "Input OTP", headerBackTitle: "" }}
+            />
+            <Stack.Screen name="ChangePassword" component={ChangePassword}
+                options={{ title: "Change Password", headerBackTitle: "" }}
+            />
+            <Stack.Screen name="About" component={About}
+                options={{ title: "About Us", headerBackTitle: "" }}
+            />
+            <Stack.Screen name="HistoryOrder" component={HistoryOrder}
+                options={{ title: "Order History", headerBackTitle: "" }}
+            />
+            <Stack.Screen name="HistoryOrderDetail" component={HistoryOrderDetail}
+                options={{ title: "Order Detail", headerBackTitle: "" }}
             />
         </Stack.Navigator>
     )

@@ -45,8 +45,8 @@ export function* registerWithEmail(action) {
 export function* LogOutEmail() {
   try {
     // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
+    const state = yield select()
+    console.log('UserSaga state-- ', state)
     // In ra các data đang có trong store
     const response = yield call(Firebase.User.logOutEmail);
     console.log('saga logout')

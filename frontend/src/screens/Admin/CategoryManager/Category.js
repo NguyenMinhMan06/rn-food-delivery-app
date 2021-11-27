@@ -1,43 +1,35 @@
-import { useIsFocused } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
-import { useSelector } from 'react-redux'
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import { fonts } from '../../../../assets/style'
-import { windowHeight, windowWidth } from '../../../../utils/Dimentions'
+import { getItemCatAction } from '../../../redux/action'
 
-const Product = ({ navigation }) => {
+const Category = ({ navigation }) => {
+
     const catState = useSelector(state => state.itemCat)
     const itemState = useSelector(state => state.item)
 
-    console.log(catState)
-    const [itemFood, setItemFood] = useState(itemState.response)
-    const [isLoading, setIsLoading] = useState(false)
+    const dispatch = useDispatch()
 
     // useEffect(() => {
-    //     setItemFood(itemState.response)
-    // })
-    const isFocused = useIsFocused();
+    //     const action = getItemCatAction()
+    //     dispatch(action)
+    // }, [])
 
-    useEffect(() => {
-        setItemFood(itemState.response)
-        setDataFiltered(itemState.response)
-    }, [isFocused]);
-
-
+    console.log(catState)
 
     const [search, setSearch] = useState('')
+    const [categoryItem, setCategoryItem] = useState(catState.response)
+    const [dataFiltered, setDataFiltered] = useState(categoryItem)
 
-    const [dataFiltered, setDataFiltered] = useState(itemFood)
-
-    const searchItemFood = (value) => {
+    const searchCategory = (value) => {
         setSearch(value)
         if (value == '') {
-            setDataFiltered(itemFood)
+            setDataFiltered(categoryItem)
             return
         }
-        const newData = itemFood.filter(i => {
-            return i.foodName.toLowerCase().includes(value.toLowerCase())
+        const newData = categoryItem.filter(i => {
+            return i.name.toLowerCase().includes(value.toLowerCase())
         })
         setDataFiltered(newData)
     }
@@ -47,19 +39,13 @@ const Product = ({ navigation }) => {
         dataFiltered.map((item, index) => {
             return renderList.push(
                 <View key={index} style={{ paddingVertical: 10, }} >
-                    <TouchableOpacity onPress={() => { navigation.navigate('EditProduct', { item }) }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate('EditCategory', { item }) }}>
                         <Text style={{ ...fonts.type1 }}>
-                            Name: <Text style={{ ...fonts.type1, fontWeight: 'bold' }}>{item.foodName}</Text>
+                            Name: <Text style={{ ...fonts.type1, fontWeight: 'bold' }}>{item.name}</Text>
                         </Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
-                            <Text style={{ ...fonts.type1 }}>
-                                Category: {item.catName}
-                            </Text>
-                            <Text style={{ ...fonts.type1 }}>
-                                Price: {item.price}
-                            </Text>
-
-                        </View>
+                        <Text style={{ ...fonts.type1 }}>
+                            Product: {item.count}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             )
@@ -70,7 +56,6 @@ const Product = ({ navigation }) => {
             </ScrollView>
         )
     }
-
 
     if (itemState.isLoading || catState.isLoading) {
         return (
@@ -112,8 +97,9 @@ const Product = ({ navigation }) => {
         );
     }
 
+
     return (
-        <SafeAreaView style={styles.container}>
+        <View>
             <View style={{ height: 60, padding: 10, }}>
                 <View style={{
 
@@ -127,21 +113,15 @@ const Product = ({ navigation }) => {
                     <TextInput
                         placeholder="Search name..."
                         value={search}
-                        onChangeText={(value) => { searchItemFood(value) }}
+                        onChangeText={(value) => { searchCategory(value) }}
                     />
                 </View>
             </View>
-
             {renderProduct(navigation)}
-        </SafeAreaView>
+        </View>
     )
 }
 
-export default Product
+export default Category
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-
-})
+const styles = StyleSheet.create({})

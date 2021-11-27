@@ -17,7 +17,7 @@ const Discover = ({ navigation, route }) => {
     const [allProduct, setAllProduct] = useState(null)
     const [productFiltered, setProductFiltered] = useState([])
     const [search, setSearch] = useState('')
-    console.log(homeState.response.id)
+    // console.log(homeState.response.id)
 
     useEffect(() => {
         if (!arrayIsEmpty(itemState.response)) {

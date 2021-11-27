@@ -3,9 +3,9 @@ import firestore from '@react-native-firebase/firestore';
 import Geocoder from 'react-native-geocoding';
 import { objectIsNull, showToast } from '../../../utils/function';
 
-export async function getFirestoreUser(user) {
+export async function getFirestoreUser(action) {
     // console.log('im running firestore', user)
-    const userInfo = await firestore().collection('users').doc(user.data).get().then((doc) => {
+    const userInfo = await firestore().collection('users').doc(action.data).get().then((doc) => {
         // console.log('doc data', doc.data())
         return {
             ...doc.data(),
@@ -13,6 +13,23 @@ export async function getFirestoreUser(user) {
         }
     });
     return userInfo
+}
+
+export const firestoreBranch = {
+    getLocationList: async () => {
+        const list = []
+        await firestore()
+            .collection('branch')
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data()
+                    list.push({ ...data, id: doc.id })
+                    // console.log(data)
+                })
+            })
+        return list
+    }
 }
 
 
@@ -111,8 +128,8 @@ export const firestoreCart = {
                     catName: itemAdd.catName,
                     foodName: itemAdd.foodName,
                     price: itemAdd.price,
-                    quantity: itemAdd.quantity,
                     rating: itemAdd.rating,
+                    image: itemAdd.image,
                     quantity: 1
                 })
                 .then(() => {
@@ -165,18 +182,70 @@ export const foodItem = {
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    const { foodName, catName, price, rating, catId } = doc.data()
+                    const { foodName, catName, price, rating, catId, description, image } = doc.data()
                     list.push({
                         id: doc.id,
                         catId: catId,
                         foodName: foodName,
                         catName: catName,
                         price: price,
-                        rating: rating
+                        rating: rating,
+                        description: description,
+                        image: image
                     })
                 })
             })
         return list
+    },
+    addFoodItem: async (action) => {
+        console.log(action.data)
+        const dataAdd = action.data
+        const data = []
+        await firestore()
+            .collection('foods')
+            .doc('foodDetail')
+            .collection('food')
+            .add({
+                catId: dataAdd.catId,
+                catName: dataAdd.catName,
+                description: dataAdd.description,
+                foodName: dataAdd.foodName,
+                price: dataAdd.price,
+                rating: 0,
+                image: dataAdd.image
+            }).then(async (doc) => {
+                data.push({
+                    id: doc.id,
+                    catId: dataAdd.catId,
+                    catName: dataAdd.catName,
+                    description: dataAdd.description,
+                    foodName: dataAdd.foodName,
+                    price: dataAdd.price,
+                    rating: 0,
+                    image: dataAdd.image
+                })
+                await firestore()
+                    .collection('foods')
+                    .doc("foodCat")
+                    .collection("category")
+                    .doc(`${dataAdd.catId}`)
+                    .get()
+                    .then(async doc => {
+                        const { productCount } = doc.data()
+                        await firestore()
+                            .collection('foods')
+                            .doc("foodCat")
+                            .collection("category")
+                            .doc(`${dataAdd.catId}`).update({
+                                productCount: productCount + 1
+                            }).then(() => { console.log('+ success') })
+                    })
+            })
+
+        return data
+    },
+    addFoodCat: async (action) => {
+
     },
     getFoodCat: async () => {
         const listCat = []
@@ -187,15 +256,56 @@ export const foodItem = {
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    const { catName } = doc.data()
+                    const { catName, productCount } = doc.data()
                     listCat.push({
                         id: doc.id,
-                        name: catName
+                        name: catName,
+                        count: productCount
                     })
                 })
             })
         return listCat
     },
+    updateFoodCategoryCount: async (id, isMinus = false) => {
+        if (!isMinus) {
+            await firestore()
+                .collection('foods')
+                .doc("foodCat")
+                .collection("category")
+                .doc(`${id}`)
+                .get()
+                .then(async doc => {
+                    const { productCount } = doc.data()
+                    await firestore()
+                        .collection('foods')
+                        .doc("foodCat")
+                        .collection("category")
+                        .doc(`${id}`).update({
+                            productCount: productCount + 1
+                        }).then(() => { console.log('+ success') })
+                })
+
+        }
+        else {
+            await firestore()
+                .collection('foods')
+                .doc("foodCat")
+                .collection("category")
+                .doc(`${id}`)
+                .get()
+                .then(async doc => {
+                    const { productCount } = doc.data()
+                    await firestore()
+                        .collection('foods')
+                        .doc("foodCat")
+                        .collection("category")
+                        .doc(`${id}`).update({
+                            productCount: productCount - 1
+                        }).then(() => { console.log('- success') })
+                })
+        }
+
+    }
 }
 
 export const favoriteItem = {
@@ -214,6 +324,7 @@ export const favoriteItem = {
                 rating: item.rating,
                 catName: item.catName,
                 catId: item.catId,
+                image: item.image
             })
             .then(() => {
                 data.push({
@@ -223,6 +334,7 @@ export const favoriteItem = {
                     rating: item.rating,
                     catName: item.catName,
                     catId: item.catId,
+                    image: item.image
                 })
                 console.log('add favorite successfully', data)
             })
@@ -254,7 +366,7 @@ export const favoriteItem = {
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    const { foodName, catName, price, rating, catId } = doc.data()
+                    const { foodName, catName, price, rating, catId, image } = doc.data()
                     list.push({
                         id: doc.id,
                         foodName: foodName,
@@ -262,9 +374,18 @@ export const favoriteItem = {
                         price: price,
                         rating: rating,
                         catId: catId,
+                        image: image
                     })
                 })
             })
         return list
+    }
+}
+export const order = {
+    addOrder: async (action) => {
+        const userId = action.data.userId
+        const data = action.data.item
+        
+
     }
 }

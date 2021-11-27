@@ -3,6 +3,7 @@ import * as ActionTypes from '../action/actionType'
 import * as UserSaga from '../sagas/userSaga'
 import * as itemSaga from '../sagas/itemSaga'
 import * as cartSaga from '../sagas/cartSaga'
+import * as locationSaga from '../sagas/locationSaga'
 
 
 export default function* rootSaga() {
@@ -25,6 +26,10 @@ export default function* rootSaga() {
 
     yield all([
         yield takeLatest(ActionTypes.GET_ITEM, itemSaga.getItem)
+    ])
+
+    yield all([
+        yield takeLatest(ActionTypes.ADD_ITEM, itemSaga.addItem)
     ])
 
     yield all([
@@ -61,6 +66,10 @@ export default function* rootSaga() {
 
     yield all([
         yield takeLatest(ActionTypes.ADD_USERPHONE, UserSaga.addUserPhone)
+    ])
+
+    yield all([
+        yield takeLatest(ActionTypes.GET_LOCATION_LIST, locationSaga.getLocList)
     ])
 
 }

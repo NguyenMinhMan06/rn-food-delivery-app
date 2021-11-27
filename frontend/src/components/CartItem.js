@@ -33,7 +33,7 @@ const CartItem = (props) => {
                 borderColor: colors.grey,
                 marginRight: 20,
             }}>
-            <ImageBackground source={require('../../assets/images/kolo-mee.jpg')} imageStyle={{ width: '100%', height: '100%', borderRadius: 10, }} style={{ width: '100%', height: '50%', borderRadius: 10, borderColor: '#000', }} resizeMode='cover'>
+            <ImageBackground source={props.item.image ? { uri: props.item.image } : require('../../assets/images/kolo-mee.jpg')} imageStyle={{ width: '100%', height: '100%', borderRadius: 10, }} style={{ width: '100%', height: '50%', borderRadius: 10, borderColor: '#000', }} resizeMode='contain'>
                 {/* <View style={{ alignItems: 'flex-end', paddingTop: 6, paddingRight: 6 }}>
                     <TouchableOpacity onPress={() => onPressFavorites(props.item)} style={{ borderRadius: 10, backgroundColor: '#fff', padding: 8, justifyContent: 'center', alignItems: 'center' }}>
                         <FontAwesome5Icon name={'heart'} solid={mark} color={colors.default} size={28} />

@@ -1,18 +1,17 @@
-import { ADD_ITEM_SUCCESS, GET_ITEM_FAIL, GET_ITEM_SUCCESS, } from "../action/actionType";
+import { GET_LOCATION_LIST_ERROR, GET_LOCATION_LIST_SUCCESS } from "../action/actionType"
+
 
 const initialState = {
     isLoading: true
 }
 
-const itemReducer = (state = initialState, action) => {
+const locationReducer = (state = initialState, action) => {
     try {
         const response = action.response
         switch (action.type) {
-            case GET_ITEM_SUCCESS:
+            case GET_LOCATION_LIST_SUCCESS:
                 return { ...state, isLoading: false, response: response }
-            case ADD_ITEM_SUCCESS:
-                return { ...state, isLoading: false, response: [...state.response, ...response] }
-            case GET_ITEM_FAIL:
+            case GET_LOCATION_LIST_ERROR:
                 const error = action.error
                 return { ...state, isLoading: false, error: error }
             default:
@@ -23,4 +22,4 @@ const itemReducer = (state = initialState, action) => {
     }
 }
 
-export default itemReducer
+export default locationReducer

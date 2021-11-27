@@ -18,6 +18,7 @@ const Favorites = ({ navigation, route }) => {
     const [allProduct, setAllProduct] = useState([])
 
     console.log(itemFavState)
+    console.log(allProduct)
 
     useEffect(() => {
         setAllProduct(itemFavState.response)
@@ -41,7 +42,8 @@ const Favorites = ({ navigation, route }) => {
     }
     const addItemToCartHandler = (item) => {
         console.log(item)
-        const action = addToCartAction(item)
+        const data = { item: item, userId: homeState.response.id }
+        const action = addToCartAction(data)
         dispatch(action)
     }
 
@@ -96,7 +98,7 @@ const Favorites = ({ navigation, route }) => {
                                     borderBottomWidth: 1,
                                 }}>
                                     <Image
-                                        source={require('../../../assets/images/honey-mustard-chicken-burger.jpg')}
+                                        source={item.image ? { uri: item.image } : require('../../../assets/images/honey-mustard-chicken-burger.jpg')}
                                         style={{ height: 120, width: '30%', }}
                                         resizeMode='contain'
                                     />
