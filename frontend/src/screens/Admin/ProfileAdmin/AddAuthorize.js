@@ -31,6 +31,13 @@ const AddAuthorize = ({ navigation, route }) => {
     const [roleSelect, setRoleSelect] = useState(route.params.item.role)
     const [Item, setItem] = useState(roleValue)
 
+    const [userBranchName, setUserBranchName] = useState('')
+    const renderBranch = (id) => {
+        const found = BranchItem.filter(i => i.value == id)
+        // console.log(found)
+        setUserBranchName(found[0].label)
+    }
+
     const onPressUpdateRole = async () => {
         if (roleSelect == null) {
             alert('Please choose role to update')
@@ -72,12 +79,20 @@ const AddAuthorize = ({ navigation, route }) => {
             return newList.push({ value: item.id, label: item.name })
         })
         setBranchItem(newList)
+
     }
 
     useEffect(() => {
         branchValue()
+
     }, [])
-    console.log(locationState)
+    useEffect(() => {
+        if (user.branch !== '' && BranchItem !== '') {
+            renderBranch(user.branch)
+        }
+    }, [BranchItem])
+    // console.log(locationState)
+    // console.log(renderBranch(user.branch))
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
@@ -203,7 +218,7 @@ const AddAuthorize = ({ navigation, route }) => {
                         fontWeight: 'bold',
                         color: '#324b68'
                     }}>
-                        Category
+                        Role
                     </Text>
                 </View>
                 {stateUser.response.role == 'admin' ?
@@ -246,7 +261,7 @@ const AddAuthorize = ({ navigation, route }) => {
                     }}>
                         <TextInput
                             style={{ color: '#000' }}
-                            value={user.role}
+                            value={user.role == '' ? 'user' : user.role}
                             editable={false}
                         />
                     </View>
@@ -304,7 +319,7 @@ const AddAuthorize = ({ navigation, route }) => {
                     }}>
                         <TextInput
                             style={{ color: '#000' }}
-                            value={user.branch}
+                            value={userBranchName}
                             editable={false}
                         />
                     </View>
