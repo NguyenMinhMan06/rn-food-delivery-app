@@ -114,7 +114,7 @@ export default function AdminNavigation(props) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="AdminHome" component={TabsScreen}
-        options={{ title: "Admin Manager", headerBackTitle: "" }}
+        options={{ title: "Manager", headerBackTitle: "" }}
       />
       <Stack.Screen name="Product" component={Product}
         options={{ title: "Product Manager", headerBackTitle: "" }}
