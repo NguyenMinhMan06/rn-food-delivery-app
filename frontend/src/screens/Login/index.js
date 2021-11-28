@@ -125,7 +125,7 @@ const Login = ({ navigation }) => {
                 </Text>
             </ImageBackground>
 
-            <View style={{ flexDirection: 'row', marginBottom: 60 }}>
+            <View style={{ flexDirection: 'row', }}>
                 <Text style={fonts.type3}>
                     Don't have an acount?{" "}
                 </Text>
@@ -135,6 +135,16 @@ const Login = ({ navigation }) => {
                         navigation.navigate('SignUpScreen')
                         setData({ email: '', password: '' })
                     }}><Text style={{ ...fonts.type3, color: "#2e64e5" }} >Create here</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: 'row', marginBottom: 60 }}>
+                
+                <TouchableOpacity
+                    style={styles.forgotButton}
+                    onPress={() => {
+                        navigation.navigate('ForgotScreen')
+                        setData({ email: '', password: '' })
+                    }}><Text style={{ ...fonts.type3, color: "#2e64e5" }} >Forgot your password?</Text>
                 </TouchableOpacity>
             </View>
 

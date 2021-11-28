@@ -9,6 +9,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import InputPhone from '../screens/PhoneVerify/InputPhone';
 import InputOTP from '../screens/PhoneVerify/InputOTP';
 import { useSelector } from 'react-redux';
+import ForgotPassword from '../screens/Login/ForgotPassword';
 
 const RootStack = createStackNavigator();
 
@@ -47,7 +48,8 @@ const RootStackScreen = ({ navigation }) => {
             />
             <RootStack.Screen name="SignInScreen" component={Login} />
             <RootStack.Screen name="SignUpScreen" component={Register} />
-            
+            <RootStack.Screen name="ForgotScreen" component={ForgotPassword} />
+
         </RootStack.Navigator>
     )
 }
