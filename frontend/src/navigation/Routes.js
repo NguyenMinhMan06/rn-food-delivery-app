@@ -1,14 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import RootStackScreen from './RootStackNavigation';
 import auth from '@react-native-firebase/auth';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import TabsScreen from './TabNavigation';
-import { getUserAction } from '../redux/action';
 import { useDispatch, useSelector } from 'react-redux';
-import StackScreen from './TabNavigation';
-import VerifyNavigation from './VerifyNavigation';
+import { getUserAction } from '../redux/action';
 import AdminNavigation from './AdminNavigation';
+import RootStackScreen from './RootStackNavigation';
+import StackScreen from './TabNavigation';
 
 
 

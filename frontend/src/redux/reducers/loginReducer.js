@@ -1,4 +1,4 @@
-import { LOGIN, LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT, LOGOUT_SUCCESS, REGISTER, REGISTER_FAIL, REGISTER_SUCCESS, RETRIEVE_TOKEN } from "../action/actionType";
+import { LOGIN_FAIL, LOGIN_SUCCESS, LOGOUT_SUCCESS } from "../action/actionType";
 
 const initialState = {
 }
@@ -14,14 +14,6 @@ const loginReducer = (state = initialState, action) => {
                 return {...state, error}
             case LOGOUT_SUCCESS:
                 return state = initialState
-            // case REGISTER_SUCCESS:
-            //     const newRegister = action.response
-            //     return login = newRegister
-            // case REGISTER_FAIL:
-            //     login = initialState
-            //     return {
-            //         error: action.error
-            //     }
             default:
                 return state
         }
