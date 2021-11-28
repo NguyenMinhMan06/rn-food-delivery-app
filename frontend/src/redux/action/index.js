@@ -109,9 +109,3 @@ export const getLocationListAction = () => {
     }
 }
 
-export const addOrderAction = (item) => {
-    return {
-        type: GET_LOCATION_LIST,
-        data: item
-    }
-}

@@ -1,4 +1,4 @@
-import { ADD_TO_CART, ADD_TO_CART_SUCCESS, GET_ITEM_CART, GET_ITEM_CART_FAIL, GET_ITEM_CART_SUCCESS, REMOVE_FROM_CART, REMOVE_FROM_CART_SUCCESS } from "../action/actionType"
+import { ADD_TO_CART, ADD_TO_CART_SUCCESS, GET_ITEM_CART, GET_ITEM_CART_FAIL, GET_ITEM_CART_SUCCESS, LOGOUT_SUCCESS, REMOVE_FROM_CART, REMOVE_FROM_CART_SUCCESS } from "../action/actionType"
 
 const initialState = {
     isLoading: true,
@@ -24,6 +24,8 @@ const cartItemsReducer = (state = initialState, action) => {
             case GET_ITEM_CART_FAIL:
                 const error = action.error
                 return { ...state, isLoading: false, error: error }
+            case LOGOUT_SUCCESS:
+                return state = initialState
             default:
                 return state
         }

@@ -28,6 +28,8 @@ export const firestoreBranch = {
                     // console.log(data)
                 })
             })
+        console.log('list       ', list)
+
         return list
     }
 }
@@ -385,7 +387,7 @@ export const order = {
     addOrder: async (action) => {
         const userId = action.data.userId
         const data = action.data.item
-        
+
 
     }
 }

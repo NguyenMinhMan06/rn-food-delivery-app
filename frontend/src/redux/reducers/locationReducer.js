@@ -1,4 +1,4 @@
-import { GET_LOCATION_LIST_ERROR, GET_LOCATION_LIST_SUCCESS } from "../action/actionType"
+import { GET_LOCATION_LIST_ERROR, GET_LOCATION_LIST_SUCCESS, LOGOUT_SUCCESS } from "../action/actionType"
 
 
 const initialState = {
@@ -14,6 +14,8 @@ const locationReducer = (state = initialState, action) => {
             case GET_LOCATION_LIST_ERROR:
                 const error = action.error
                 return { ...state, isLoading: false, error: error }
+            case LOGOUT_SUCCESS:
+                return state = initialState
             default:
                 return state
         }

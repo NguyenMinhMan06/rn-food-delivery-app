@@ -177,40 +177,44 @@ const Home = ({ navigation }) => {
 
     //check status of map run like a loop
     useEffect(() => {
-        mapAnimation.addListener(({ value }) => {
-            let index = Math.floor(value / (windowWidth * 0.8) + 0.3); // animate 30% away from landing on the next item
-            if (index >= locations.length) {
-                index = locations.length - 1;
-            }
-            if (index <= 0) {
-                index = 0;
-            }
-            console.log(`index:${index}, mapindex: ${mapIndex}, loc length: ${locations.length}, value: ${value}`)
-            clearTimeout(regionTimeout);
-
-            const regionTimeout = setTimeout(() => {
-                if (mapIndex !== index) {
-                    mapIndex = index;
-                    const { coords } = locations[index];
-                    _map.current.animateToRegion(
-                        {
-                            ...coords,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        },
-                        350
-                    )
+        isSelectedTab == 2 ?
+            mapAnimation.addListener(({ value }) => {
+                let index = Math.floor(value / (windowWidth * 0.8) + 0.3); // animate 30% away from landing on the next item
+                if (index >= locations.length) {
+                    index = locations.length - 1;
                 }
-            }, 10)
-        })
+                if (index <= 0) {
+                    index = 0;
+                }
+                console.log(`index:${index}, mapindex: ${mapIndex}, loc length: ${locations.length}, value: ${value}`)
+                clearTimeout(regionTimeout);
+
+                const regionTimeout = setTimeout(() => {
+                    if (mapIndex !== index) {
+                        mapIndex = index;
+                        const { coords } = locations[index];
+                        _map.current.animateToRegion(
+                            {
+                                ...coords,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            },
+                            350
+                        )
+                    }
+                }, 10)
+            })
+            : null
     })
 
     // calculate the time and distance when user select location
     useEffect(() => {
-        mergeCoords()
+        if (desLocation.desLatitude != null) {
+            mergeCoords()
+        }
     }, [desLocation.desLatitude || desLocation.desLongitude])
 
-    const interpolations = locations.map((marker, index) => {
+    const interpolations = !objectIsNull(locations) ? locations.map((marker, index) => {
         const inputRange = [
             (index - 1) * windowWidth * 0.8,
             index * windowWidth * 0.8,
@@ -224,7 +228,8 @@ const Home = ({ navigation }) => {
         });
 
         return { scale };
-    })
+    }) : null
+
 
     const onPressTracking = (marker, index) => {
         setDesLocation({ desLatitude: marker.coords.latitude, desLongitude: marker.coords.longitude })
@@ -237,15 +242,20 @@ const Home = ({ navigation }) => {
     const [idSelected, setIdSelected] = useState(-1)
     const [listSelection, setListSelection] = useState(null)
 
+
     // run after dispatch action complete
     useEffect(() => {
         if (catState.response && itemState.response) {
             setListCategory(catState.response)
+        }
+        if (itemState.response) {
             setListFood(itemState.response)
             setListSelection(itemState.response)
-            // setFavList(itemFavState.response)
         }
-    }, [catState, itemState])
+        if (locList.response) {
+            setLocations(locList.response)
+        }
+    }, [catState, itemState, locList])
 
     const onPressFoodItem = (item) => {
         // console.log('homeitem: ', item)
@@ -324,7 +334,7 @@ const Home = ({ navigation }) => {
     // console.log(cartItem)
 
     const __scrollView = useRef(null)
-    if (itemState.isLoading || catState.isLoading || homeState.isLoading || locList.isLoading) {
+    if (itemState.isLoading || catState.isLoading || homeState.isLoading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
                 <Modal
@@ -391,10 +401,7 @@ const Home = ({ navigation }) => {
                     <View style={{ flex: 4 }}>
                         <CarouselAutoPlay
                             reff={ref}
-                            data={[{ id: 1, title: 'Frenzy Friday', des: 'Freeship for drink deals above', des2: ' 80.000 VND' },
-                            { id: 2, title: 'Black Friday', des: 'Free ship for all deal and 15% OFF' }]
-                            }
-                        />
+                            data={[{ id: 1, title: 'FRIDAY FUNDAY', des: 'FREE SHIP FOR DEAL ABOVE', des2: ' 200K' }, { id: 2, title: 'First Sunday', des: 'First sunday of the month every deal will 10% off' }, { id: 3, title: 'Deal of the month' }]} />
                     </View>
                     <View style={{ flex: 15, width: '100%', }}>
 
@@ -588,12 +595,7 @@ const Home = ({ navigation }) => {
 
                     >
                         {locations.map((marker, index) => (
-                            <View style={styles.card} key={index}>
-                                <Image
-                                    source={{ uri: marker.image_url }}
-                                    style={styles.cardImage}
-                                    resizeMode="cover"
-                                />
+                            <View style={{ ...styles.card, }} key={index}>
                                 <View
                                     style={styles.textContent}
                                 >
@@ -703,7 +705,7 @@ const CarouselAutoPlay = (props) => {
                             {item.des}
                         </Text>
                         <Text style={{ ...fonts.type1, fontSize: 40, color: colors.default }}>
-                            {item.des2}
+                            {item.des2 ? item.des2 : null}
                         </Text>
                     </View>
                     <View style={{ width: '40%', justifyContent: 'flex-start', height: '90%' }}>
@@ -711,7 +713,7 @@ const CarouselAutoPlay = (props) => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: '10%' }}>
                             <FontAwesome5Icon name={'chevron-right'} size={14} color="#fff" />
                             <Text style={{ color: '#fff' }}>
-                                {"  "} SUPPER FRIDAY
+                                {"  "} BIG DEAL
                             </Text>
                         </View>
 
@@ -784,7 +786,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         shadowOpacity: 0.3,
         shadowOffset: { x: 2, y: -2 },
-        height: 220,
+        height: 100,
         width: windowWidth * 0.8,
         overflow: "hidden",
     },

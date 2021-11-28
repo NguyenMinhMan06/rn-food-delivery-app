@@ -13,7 +13,7 @@ export function* getItem() {
     const response = yield call(Firestore.foodItem.getFoodItem);
     yield put({ type: ActionTypes.GET_ITEM_SUCCESS, response })
   } catch (error) {
-    console.log('itemSaga', error)
+    console.log('itemSaga get', error)
     yield put({ type: ActionTypes.GET_ITEM_FAIL, error })
   }
 }
@@ -27,7 +27,7 @@ export function* addItem(action) {
     const response = yield call(Firestore.foodItem.addFoodItem, action);
     yield put({ type: ActionTypes.ADD_ITEM_SUCCESS, response })
   } catch (error) {
-    console.log('itemSaga', error)
+    console.log('itemSaga add', error)
     yield put({ type: ActionTypes.GET_ITEM_FAIL, error })
   }
 }
@@ -42,7 +42,7 @@ export function* getItemCat() {
     const response = yield call(Firestore.foodItem.getFoodCat);
     yield put({ type: ActionTypes.GET_ITEM_CAT_SUCCESS, response })
   } catch (error) {
-    console.log('itemSaga', error)
+    console.log('itemSaga catget', error)
     yield put({ type: ActionTypes.GET_ITEM_CAT_FAIL, error })
   }
 }
@@ -56,7 +56,7 @@ export function* getItemFav(action) {
     const response = yield call(Firestore.favoriteItem.getFavItem, action);
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_SUCCESS, response })
   } catch (error) {
-    console.log('itemSaga', error)
+    console.log('itemSaga favget', error)
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_FAIL, error })
   }
 }
@@ -70,7 +70,7 @@ export function* addItemFav(action) {
     const response = yield call(Firestore.favoriteItem.addFavItem, action);
     yield put({ type: ActionTypes.ADD_ITEM_FAVORITE_SUCCESS, response })
   } catch (error) {
-    console.log('itemSaga', error)
+    console.log('itemSaga addfav', error)
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_FAIL, error })
   }
 }
@@ -84,7 +84,7 @@ export function* removeItemFav(action) {
     const response = yield call(Firestore.favoriteItem.removeFavItem, action);
     yield put({ type: ActionTypes.REMOVE_ITEM_FAVORITE_SUCCESS, response })
   } catch (error) {
-    console.log('itemSaga', error)
+    console.log('itemSaga rmvfav', error)
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_FAIL, error })
   }
 }
