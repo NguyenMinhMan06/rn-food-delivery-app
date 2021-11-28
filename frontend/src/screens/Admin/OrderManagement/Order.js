@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
+import { arrayIsEmpty } from '../../../../utils/function';
 
 const Order = ({ navigation }) => {
     const stateUser = useSelector(state => state.user)
@@ -11,27 +12,45 @@ const Order = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
 
     const getOrderFromBranch = async () => {
-        if (stateUser.response.branch == '') {
+        if (stateUser.response.branch == '' && stateUser.response.role == 'manager') {
             alert('you have not got a branch yet. Please ask permission and try later')
+            setIsLoading(false)
+            setBranchListOrder([])
             return
         }
         try {
             const newList = []
-            await firestore().collection('orders')
-                .get()
-                .then(querySnapShot => {
-                    querySnapShot.forEach(doc => {
-                        const { shopAddress } = doc.data()
-                        if (shopAddress.id == stateUser.response.branch) {
+            if (stateUser.response.role == 'admin') {
+                await firestore().collection('orders')
+                    .get()
+                    .then(querySnapShot => {
+                        querySnapShot.forEach(doc => {
                             newList.push({ ...doc.data() })
-                        }
+                        })
+                    }).then(() => {
+                        setIsLoading(false)
+                        setBranchListOrder(newList)
                     })
-                }).then(() => {
-                    setIsLoading(false)
-                    setBranchListOrder(newList)
-                })
+            }
+            else {
+                await firestore().collection('orders')
+                    .get()
+                    .then(querySnapShot => {
+                        querySnapShot.forEach(doc => {
+                            const { shopAddress } = doc.data()
+                            if (shopAddress.id == stateUser.response.branch) {
+                                newList.push({ ...doc.data() })
+                            }
+                        })
+                    }).then(() => {
+                        setIsLoading(false)
+                        setBranchListOrder(newList)
+                    })
+            }
+
         } catch (error) {
             console.log(error)
+
         }
     }
 
@@ -83,7 +102,13 @@ const Order = ({ navigation }) => {
 
     return (
         <SafeAreaView style={{ flex: 1, }}>
-            {branchListOrder != null ? renderOrderItem({ navigation }) : null}
+            {!arrayIsEmpty(branchListOrder) ? renderOrderItem({ navigation }) :
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text>
+                        You do not have branch please ask permission
+                    </Text>
+                </View>
+            }
         </SafeAreaView>
     )
 }

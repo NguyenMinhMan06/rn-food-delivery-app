@@ -65,7 +65,7 @@ const CartItem = (props) => {
                     </View>
 
                     <Text numberOfLines={2} style={{ ...fonts.type1, height: 40, }}>
-                        Nulla veniam officia aliqua mollit laboris do qui dolor fugiat ut.
+                        {props.item.description}
                     </Text>
                 </View>
                 <View style={props.horizontal ? { width: '90%', justifyContent: 'space-between', paddingTop: '2%', } : { width: '90%', justifyContent: 'space-between', paddingTop: '2%', flexDirection: 'row', alignItems: 'center' }}>

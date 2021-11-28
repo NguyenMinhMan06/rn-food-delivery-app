@@ -92,6 +92,10 @@ const AddProduct = () => {
         dispatch(action)
         if (itemState.error == null) {
             setMessage({ mess: 'Add successfully', success: true })
+            setCategorySelect('')
+            setDescription('')
+            setImage(null)
+            setProductName('')
         }
         else {
             setMessage({ mess: 'Something wrong with server please try again later', success: false })

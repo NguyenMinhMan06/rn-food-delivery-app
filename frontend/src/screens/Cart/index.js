@@ -283,7 +283,7 @@ const Cart = ({ navigation, route }) => {
                         </View>
                         <View style={{ flexDirection: 'row', padding: 10, paddingHorizontal: '3%', borderColor: colors.grey, justifyContent: 'space-between', borderBottomWidth: 1, }}>
                             <Text>
-                                Shipping Free(distance)
+                                Shipping Fee(distance)
                             </Text>
                             <Text>
                                 {shippPrice} VND

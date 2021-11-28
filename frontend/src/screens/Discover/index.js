@@ -53,6 +53,7 @@ const Discover = ({ navigation, route }) => {
 
     const onPressFoodItem = (item) => {
         const found = itemFavState.response.some(i => i.id == item.id)
+        searchProductFilter('')
         navigation.navigate('FoodDetail', { item: item, isFavorite: found })
     }
 

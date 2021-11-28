@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import Geolocation from 'react-native-geolocation-service';
 import { colors, fonts } from '../../../assets/style';
 import { useDispatch } from 'react-redux';
+import { addLocationUserAction } from '../../redux/action';
 
 const Address = ({ navigation, route }) => {
     console.log(route.params)
@@ -39,14 +40,20 @@ const Address = ({ navigation, route }) => {
             console.warn(err)
         }
     }
-    const onPressUpdateLocation = () => {
-        // const action = addLocationUserAction(data)
-        // dispatch(action)
+    const ref = useRef();
 
+    const onPressUpdateLocation = () => {
+        const action = addLocationUserAction(data)
+        dispatch(action)
     }
 
     useEffect(() => {
-        if (route.params.pin.latitude == null) locationPermission()
+        ref.current?.setAddressText('Some Text');
+    }, []);
+
+
+    useEffect(() => {
+        if (route.params?.pin == null) locationPermission()
         else setRegion(route.params.pin)
     }, [])
     if (!granted) return (
@@ -66,6 +73,7 @@ const Address = ({ navigation, route }) => {
         <View style={{ flex: 1, }}>
             <View style={{ flex: 1, width: '100%', padding: '3%', height: 400, }}>
                 <GooglePlacesAutocomplete
+                    ref={ref}
                     placeholder='Search'
                     fetchDetails={true}
                     onFail={error => console.error(error)}
@@ -74,6 +82,7 @@ const Address = ({ navigation, route }) => {
                     }}
                     onPress={(data, details = null) => {
                         // 'details' is provided when fetchDetails = true
+                        console.log('item', data)
                         setRegion({
                             ...region,
                             latitude: details.geometry.location.lat,
@@ -89,14 +98,14 @@ const Address = ({ navigation, route }) => {
                 />
             </View>
             <View style={{ width: '100%', padding: '3%' }}>
-                <Text>
+                {/* <Text>
                     Your location {region.latitude}   {"  "}  {region.longitude}
-                </Text>
+                </Text> */}
                 <View style={{ padding: 10, backgroundColor: colors.default, justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => {
                         onPressUpdateLocation()
                     }}>
-                        <Text>
+                        <Text style={{ color: '#fff' }}>
                             Save location
                         </Text>
                     </TouchableOpacity>

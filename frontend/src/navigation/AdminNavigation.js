@@ -99,7 +99,7 @@ const TabsScreen = () => {
                 color: focused ? colors.default : '#748c94',
                 fontSize: 12,
               }}>
-                Admin
+                User
               </Text>
             </View>
           )
@@ -114,10 +114,10 @@ export default function AdminNavigation(props) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="AdminHome" component={TabsScreen}
-        options={{ title: "Manager", headerBackTitle: "" }}
+        options={{ title: "Management", headerBackTitle: "" }}
       />
       <Stack.Screen name="Product" component={Product}
-        options={{ title: "Product Manager", headerBackTitle: "" }}
+        options={{ title: "Product Management", headerBackTitle: "" }}
       />
       <Stack.Screen name="AddProduct" component={AddProduct}
         options={{ title: "Add Product", headerBackTitle: "" }}
@@ -126,7 +126,7 @@ export default function AdminNavigation(props) {
         options={{ title: "Edit Product", headerBackTitle: "" }}
       />
       <Stack.Screen name="Category" component={Category}
-        options={{ title: "Category Manager", headerBackTitle: "" }}
+        options={{ title: "Category Management", headerBackTitle: "" }}
       />
       <Stack.Screen name="AddCategory" component={AddCategory}
         options={{ title: "Add Category", headerBackTitle: "" }}

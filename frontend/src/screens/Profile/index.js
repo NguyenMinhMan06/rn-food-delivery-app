@@ -74,6 +74,7 @@ const Profile = ({ navigation }) => {
     }
 
     const onPressTakePhoto = () => {
+        console.log('running')
         ImagePicker.openCamera({
             width: 300,
             height: 400,
@@ -153,7 +154,7 @@ const Profile = ({ navigation }) => {
                     onPress={() => setModalVisible(!modalVisible)}
                     style={{ width: '40%', justifyContent: 'center', paddingHorizontal: 10, }}>
                     <Image
-                        source={image == null ? require('../../../assets/images/avatar-1.jpg') : { uri: image }}
+                        source={image == null ? require('../../../assets/images/avatar-5.jpg') : { uri: image }}
                         style={{ width: 100, height: 100, borderRadius: 75, }} resizeMode={'cover'} />
                 </TouchableOpacity>
                 <View>
@@ -231,6 +232,7 @@ const Profile = ({ navigation }) => {
 
             </TouchableOpacity>
             <TouchableOpacity
+                onPress={() => navigation.navigate("Address", { pin: { ...homeState.coords } })}
                 style={{
 
                     width: '100%',
@@ -329,8 +331,8 @@ const Profile = ({ navigation }) => {
 
                         </View>
                         <View style={{ width: '100%', padding: '3%', }}>
-                            <TouchableOpacity o
-                                nPress={() => { onPressTakePhoto() }}
+                            <TouchableOpacity
+                                onPress={() => { onPressTakePhoto() }}
                                 style={{
                                     justifyContent: 'center',
                                     alignItems: 'center',

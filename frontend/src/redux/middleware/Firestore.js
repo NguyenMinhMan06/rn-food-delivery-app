@@ -51,7 +51,7 @@ export const firestoreUser = {
                 console.log(error)
                 return "Viet Nam"
             });
-        firestore()
+        await firestore()
             .collection('users')
             .doc(`${userId}`)
             .update({

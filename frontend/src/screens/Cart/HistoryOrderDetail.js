@@ -32,6 +32,16 @@ const HistoryOrderDetail = ({ navigation, route }) => {
                     </View>
                 </TouchableOpacity>
 
+                <TouchableOpacity disabled style={{ justifyContent: 'flex-start', width: '100%', paddingHorizontal: '3%', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.grey, paddingVertical: 10, alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View>
+                            <Text>
+                                Delivery From - {item.shopName}
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+
                 <CartRenderItem
                     data={item.orderItem}
                 />
