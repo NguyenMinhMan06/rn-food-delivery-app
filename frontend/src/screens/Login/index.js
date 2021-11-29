@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Image, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Image, ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'

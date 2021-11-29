@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import firestore from '@react-native-firebase/firestore';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { windowHeight, windowWidth } from '../../../utils/Dimentions';
+import { useSelector } from 'react-redux';
 import { fonts } from '../../../assets/style';
+import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 
 const HistoryOrder = ({ navigation }) => {
     const stateUser = useSelector(state => state.user)

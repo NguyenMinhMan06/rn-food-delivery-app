@@ -1,25 +1,16 @@
-import React, { useState } from 'react'
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors, fonts } from '../../assets/style'
 import { windowHeight, windowWidth } from '../../utils/Dimentions'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { numberWithCommas } from '../../utils/function'
 
 const CartItem = (props) => {
-    // const [mark, setMark] = useState(false)
     const onPressFoodItem = (item) => {
-        // console.log('cartitem: ', item)
         props.onPressFoodItem(item)
     }
 
-    // const onPressFavorites = (item) => {
-    //     if (!mark) props.onPressAddToFavorite(item)
-    //     else props.onPressRemoveToFavorite(item)
-    //     // props.onPressRemoveToFavorite(item)
-    //     setMark(!mark)
-    // }
     return (
         <TouchableOpacity
             key={props.item.id}
@@ -34,19 +25,9 @@ const CartItem = (props) => {
                 marginRight: 20,
             }}>
             <ImageBackground source={props.item.image ? { uri: props.item.image } : require('../../assets/images/kolo-mee.jpg')} imageStyle={{ width: '100%', height: '100%', borderRadius: 10, }} style={{ width: '100%', height: '50%', borderRadius: 10, borderColor: '#000', }} resizeMode='contain'>
-                {/* <View style={{ alignItems: 'flex-end', paddingTop: 6, paddingRight: 6 }}>
-                    <TouchableOpacity onPress={() => onPressFavorites(props.item)} style={{ borderRadius: 10, backgroundColor: '#fff', padding: 8, justifyContent: 'center', alignItems: 'center' }}>
-                        <FontAwesome5Icon name={'heart'} solid={mark} color={colors.default} size={28} />
-                    </TouchableOpacity>
-                </View> */}
-                {/* <View style={{ backgroundColor: 'cyan',  }}>
-                    <Text>
-                        sale 10%
-                    </Text>
-                </View> */}
+               
 
             </ImageBackground>
-            {/* <Image source={require('../../assets/images/ramen.png')} style={{ width: '90%', height: '40%', borderBottomWidth: 1, borderColor: '#000', backgroundColor: 'cyan' }} resizeMode='contain' /> */}
             <View style={{ width: '100%', alignItems: 'center', }}>
 
                 <View style={{ width: '90%', paddingVertical: 4, paddingBottom: 4, borderBottomWidth: 1, }}>

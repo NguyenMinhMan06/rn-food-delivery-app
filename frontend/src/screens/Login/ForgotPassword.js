@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Image, ImageBackground, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import auth from '@react-native-firebase/auth'
+import React, { useState } from 'react'
+import { ActivityIndicator, Alert, Image, ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
-import { objectIsNull } from '../../../utils/function'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
-import { registerAction } from '../../redux/action'
-import auth from '@react-native-firebase/auth';
 
 
 

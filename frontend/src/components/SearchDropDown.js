@@ -1,12 +1,6 @@
 import React from 'react';
 import {
-    TouchableOpacity,
-    StyleSheet,
-    ScrollView,
-    View,
-    Text,
-    TextInput,
-    Keyboard,
+    Keyboard, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
 
 export default function SearchDropDown(props) {

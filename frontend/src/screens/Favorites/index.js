@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import { useDispatch, useSelector } from 'react-redux'
 import { colors, fonts } from '../../../assets/style'
-import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import { arrayIsEmpty, numberWithCommas } from '../../../utils/function'
-import CartList from '../../components/CartList'
-import { windowHeight, windowWidth } from '../../../utils/Dimentions'
-import { addToCartAction, getItemAction, getItemFavAction, removeItemFavAction } from '../../redux/action'
-import { objectIsNull } from '../../../utils/function'
+import { addToCartAction, removeItemFavAction } from '../../redux/action'
 
 
 const Favorites = ({ navigation, route }) => {

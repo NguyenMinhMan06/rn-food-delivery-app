@@ -1,4 +1,4 @@
-import { ADD_ITEM_SUCCESS, GET_ITEM_FAIL, GET_ITEM_SUCCESS, LOGOUT_SUCCESS, } from "../action/actionType";
+import { ADD_ITEM_SUCCESS, GET_ITEM_FAIL, GET_ITEM_SUCCESS, LOGOUT_SUCCESS } from "../action/actionType";
 
 const initialState = {
     isLoading: true

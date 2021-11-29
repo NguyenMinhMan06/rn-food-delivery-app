@@ -1,24 +1,22 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, PermissionsAndroid, Animated, Keyboard, Modal } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import polyline from '@mapbox/polyline'
+import auth from '@react-native-firebase/auth'
+import React, { useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Animated, Image, ImageBackground, Keyboard, Modal, PermissionsAndroid, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Geolocation from 'react-native-geolocation-service'
+import { ScrollView, TextInput } from 'react-native-gesture-handler'
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps' // remove PROVIDER_GOOGLE import if not using Google Maps
+import Carousel from 'react-native-snap-carousel'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import { useDispatch, useSelector } from 'react-redux'
+import { resLocation } from '../../../assets/Data/FlatlistCategory'
 import { colors, fonts } from '../../../assets/style'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
-import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler'
-import { categoryList, foodList, resLocation } from '../../../assets/Data/FlatlistCategory'
 import { arrayIsEmpty, objectIsNull } from '../../../utils/function'
-import Carousel from 'react-native-snap-carousel'
 import CartList from '../../components/CartList'
 import ListTabSelection from '../../components/ListTabSelection'
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import Geolocation from 'react-native-geolocation-service';
-import polyline from '@mapbox/polyline'
 import SearchDropDown from '../../components/SearchDropDown'
-import auth from '@react-native-firebase/auth';
+import { addLocationUserAction, getItemAction, getItemCatAction, getItemFavAction, getLocationListAction } from '../../redux/action'
 
-import { foodItem } from '../../redux/middleware/Firestore'
-import { addLocationUserAction, getItemAction, getItemCartAction, getItemCatAction, getItemFavAction, getLocationListAction } from '../../redux/action'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
 

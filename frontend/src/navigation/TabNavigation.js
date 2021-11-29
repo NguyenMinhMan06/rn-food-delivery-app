@@ -27,31 +27,6 @@ const Stack = createStackNavigator()
 const TopTabStack = createStackNavigator()
 const MaterialTab = createMaterialTopTabNavigator();
 
-const TopTabMaterial = ({ navigation }) => {
-    return (
-        <MaterialTab.Navigator
-            swipeEnabled={false}
-            tabBar={props =>
-                <View style={{ width: '100%', height: '6%', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
-                    <TopTab {...props} />
-                </View>
-            }
-        >
-            <MaterialTab.Screen name="Delivery" component={Home}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <Text>
-                            HELLO WORLD
-                        </Text>
-                    )
-                }}
-
-            />
-            <MaterialTab.Screen name="Pick-up" component={Delivery}
-            />
-        </MaterialTab.Navigator>
-    )
-}
 
 const CustomTabBarButton = ({ children, onPress }) => (
     <TouchableOpacity
@@ -242,11 +217,6 @@ const StackScreen = ({ navigation }) => {
     )
 }
 export default StackScreen;
-
-
-
-
-
 const styles = StyleSheet.create({
     shadow: {
         shadowColor: '#7F5DF0',

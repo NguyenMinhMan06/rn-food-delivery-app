@@ -19,14 +19,6 @@ const userReducer = (state = initialState, action) => {
                 return { ...state, isLoading: false, response: { ...state.response, phoneNumber: response } }
             case LOGOUT_SUCCESS:
                 return state = initialState
-            // case REGISTER_SUCCESS:
-            //     const newRegister = action.response
-            //     return login = newRegister
-            // case REGISTER_FAIL:
-            //     login = initialState
-            //     return {
-            //         error: action.error
-            //     }
             default:
                 return state
         }

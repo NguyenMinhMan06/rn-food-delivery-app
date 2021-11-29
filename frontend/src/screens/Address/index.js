@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import React, { useEffect, useRef, useState } from 'react';
+import { PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { colors, fonts } from '../../../assets/style';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useDispatch } from 'react-redux';
+import { colors, fonts } from '../../../assets/style';
 import { addLocationUserAction } from '../../redux/action';
 
 const Address = ({ navigation, route }) => {

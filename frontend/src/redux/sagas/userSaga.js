@@ -8,13 +8,6 @@ import * as Firestore from '../middleware/Firestore'
 
 export function* loginWithEmail(action) {
   try {
-    // console.log('userSaga login action --', action)W
-    // const { email, password } = action.data
-    // console.log(email, password)
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firebase.User.loginWithEmail, action);
     console.log('User Saga Response', JSON.stringify(response))
     yield put({ type: ActionTypes.LOGIN_SUCCESS, response })
@@ -26,13 +19,6 @@ export function* loginWithEmail(action) {
 
 export function* registerWithEmail(action) {
   try {
-    // console.log('userSaga register action --', action)
-    // // const { email, password } = action.data
-    // // console.log(email, password)
-    // // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firebase.User.registerWithEmail, action);
     console.log('User Saga Response', JSON.stringify(response))
     yield put({ type: ActionTypes.REGISTER_SUCCESS, response })
@@ -44,10 +30,6 @@ export function* registerWithEmail(action) {
 
 export function* LogOutEmail() {
   try {
-    // In ra các data được dispatch qua action
-    const state = yield select()
-    console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firebase.User.logOutEmail);
     console.log('saga logout')
     yield put({ type: ActionTypes.LOGOUT_SUCCESS })
@@ -58,10 +40,6 @@ export function* LogOutEmail() {
 
 export function* getUser(action) {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.getFirestoreUser, action);
     yield put({ type: ActionTypes.GET_USER_SUCCESS, response })
   } catch (error) {
@@ -72,10 +50,6 @@ export function* getUser(action) {
 
 export function* addUserLocation(action) {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.firestoreUser.addLocation, action);
     yield put({ type: ActionTypes.ADD_LOCATION_SUCCESS, response })
   } catch (error) {
@@ -86,10 +60,6 @@ export function* addUserLocation(action) {
 
 export function* addUserPhone(action) {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.firestoreUser.addPhone, action);
     yield put({ type: ActionTypes.ADD_USERPHONE_SUCCESS, response })
   } catch (error) {

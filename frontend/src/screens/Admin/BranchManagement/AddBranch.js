@@ -1,10 +1,9 @@
+import firestore from '@react-native-firebase/firestore'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { PROVIDER_GOOGLE } from 'react-native-maps'
+import { useDispatch } from 'react-redux'
 import { colors, fonts } from '../../../../assets/style'
 import { windowHeight, windowWidth } from '../../../../utils/Dimentions'
-import firestore from '@react-native-firebase/firestore';
-import { useDispatch } from 'react-redux'
 import { getLocationListAction } from '../../../redux/action'
 
 

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler'
+import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { AirbnbRating } from 'react-native-ratings'
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors, fonts } from '../../assets/style'
 import { arrayIsEmpty } from '../../utils/function'
 

@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors } from '../../assets/style'
-import { windowHeight, windowWidth } from '../../utils/Dimentions'
-import { arrayIsEmpty } from '../../utils/function'
+import React from 'react'
+import { ScrollView, StyleSheet } from 'react-native'
 import CartItem from './CartItem'
 
 const CartList = (props) => {

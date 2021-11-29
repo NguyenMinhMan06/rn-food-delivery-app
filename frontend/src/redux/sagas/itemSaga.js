@@ -6,10 +6,6 @@ import * as ActionTypes from '../action/actionType'
 
 export function* getItem() {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.foodItem.getFoodItem);
     yield put({ type: ActionTypes.GET_ITEM_SUCCESS, response })
   } catch (error) {
@@ -20,10 +16,6 @@ export function* getItem() {
 
 export function* addItem(action) {
   try {
-    // In ra các data được dispatch qua action
-    const state = yield select()
-    console.log('itemadd state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.foodItem.addFoodItem, action);
     yield put({ type: ActionTypes.ADD_ITEM_SUCCESS, response })
   } catch (error) {
@@ -35,10 +27,6 @@ export function* addItem(action) {
 
 export function* getItemCat() {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.foodItem.getFoodCat);
     yield put({ type: ActionTypes.GET_ITEM_CAT_SUCCESS, response })
   } catch (error) {
@@ -49,10 +37,6 @@ export function* getItemCat() {
 
 export function* getItemFav(action) {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.favoriteItem.getFavItem, action);
     yield put({ type: ActionTypes.GET_ITEM_FAVORITE_SUCCESS, response })
   } catch (error) {
@@ -63,10 +47,6 @@ export function* getItemFav(action) {
 
 export function* addItemFav(action) {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.favoriteItem.addFavItem, action);
     yield put({ type: ActionTypes.ADD_ITEM_FAVORITE_SUCCESS, response })
   } catch (error) {
@@ -77,10 +57,6 @@ export function* addItemFav(action) {
 
 export function* removeItemFav(action) {
   try {
-    // In ra các data được dispatch qua action
-    // const state = yield select()
-    // console.log('UserSaga state-- ', state)
-    // In ra các data đang có trong store
     const response = yield call(Firestore.favoriteItem.removeFavItem, action);
     yield put({ type: ActionTypes.REMOVE_ITEM_FAVORITE_SUCCESS, response })
   } catch (error) {

@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, KeyboardAvoidingView, Modal, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { colors } from '../../../assets/style'
 import auth from '@react-native-firebase/auth';
-import { objectIsNull } from '../../../utils/function';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { colors } from '../../../assets/style';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 
 

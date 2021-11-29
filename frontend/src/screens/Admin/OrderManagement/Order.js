@@ -58,12 +58,6 @@ const Order = ({ navigation }) => {
         getOrderFromBranch()
     }, [])
 
-    console.log(branchListOrder)
-    // useEffect(() => {
-
-    // }, [isLoading])
-
-    // console.log(branchListOrder)
 
     const renderOrderItem = ({ navigation }) => {
         const renderList = []

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Alert, Modal, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { colors, fonts } from '../../../../assets/style'
 import firestore from '@react-native-firebase/firestore';
+import React, { useState } from 'react';
+import { Alert, Modal, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { getLocationListAction } from '../../../redux/action';
+import { colors, fonts } from '../../../../assets/style';
 import { windowHeight, windowWidth } from '../../../../utils/Dimentions';
+import { getLocationListAction } from '../../../redux/action';
 
 const EditBranch = ({ navigation, route }) => {
 

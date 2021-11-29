@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLocationListAction } from '../../../redux/action';
 import { fonts } from '../../../../assets/style';
+import { getLocationListAction } from '../../../redux/action';
 
 const Branch = ({ navigation }) => {
     const locationState = useSelector(state => state.locList)

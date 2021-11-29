@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import React, { useEffect, useState } from 'react';
+import { PermissionsAndroid, StyleSheet, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import MapView from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 
 const resLocation = [
 

@@ -1,54 +1,27 @@
-import React, { useContext, useEffect, useState } from 'react'
+import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
+import React, { useState } from 'react'
 import { ActivityIndicator, Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
-import { AuthContext } from '../../navigation/AuthProvider'
-import { getUserAction, logOutAction } from '../../redux/action'
-import auth from '@react-native-firebase/auth';
-import { colors, fonts } from '../../../assets/style'
-import FA5 from 'react-native-vector-icons/FontAwesome5'
-import Geocoder from 'react-native-geocoding'
-import ImagePicker from 'react-native-image-crop-picker';
-import { windowHeight, windowWidth } from '../../../utils/Dimentions'
+import ImagePicker from 'react-native-image-crop-picker'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
+import FA5 from 'react-native-vector-icons/FontAwesome5'
+import { useDispatch, useSelector } from 'react-redux'
+import { colors, fonts } from '../../../assets/style'
+import { windowHeight, windowWidth } from '../../../utils/Dimentions'
+import { getUserAction, logOutAction } from '../../redux/action'
 
 
 
 
 const Profile = ({ navigation }) => {
-    // const homeState = useSelector(state => state ? state.login.response ? state.login.response : state.register.response : null)
     const homeState = useSelector(state => state.user)
-    console.log('my state user', homeState)
 
     const dispatch = useDispatch()
-
-    // const [user, setUser] = useState();
-
-    // // Handle user state changes
-    // function onAuthStateChanged(user) {
-    //     setUser(user);
-    // }
-
-    // useEffect(() => {
-    //     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    //     console.log('im running useeffect')
-    //     return subscriber; // unsubscribe on unmount
-    // }, []);
-    // console.log('???', user)
     const logOutHandler = () => {
         const action = logOutAction()
         dispatch(action)
     }
 
-    // useEffect(() => {
-    //     if (user) {
-    //         console.log(user.uid)
-    //         const action = getUserAction(user.uid)
-    //         dispatch(action)
-    //     }
-    // }, [user])
-    console.log(homeState)
 
     const [modalVisible, setModalVisible] = useState(false)
     const [modalVisibleConfirmPhoto, setModalVisibleConfirmPhoto] = useState(false)
@@ -193,26 +166,6 @@ const Profile = ({ navigation }) => {
                 </View>
 
             </View>
-            {/* <View style={{ width: '100%', flexDirection: 'row', paddingVertical: 10, justifyContent: 'space-between', marginBottom: 10, }}>
-                <TouchableOpacity disabled style={{ width: '30%', height: 80, backgroundColor: '#fff', borderRadius: 10, justifyContent: 'center', alignItems: 'center', borderWidth: 0, }}>
-                    <FA5 name={'bell'} size={26} style={{ paddingBottom: 10, }} />
-                    <Text style={{ ...fonts.type1, }}>
-                        Notifications
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity disabled style={{ width: '30%', height: 80, backgroundColor: '#fff', borderRadius: 10, justifyContent: 'center', alignItems: 'center', borderWidth: 0, }}>
-                    <FA5 name={'credit-card'} size={26} style={{ paddingBottom: 10, }} />
-                    <Text style={{ ...fonts.type1, }}>
-                        Payments
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ width: '30%', height: 80, backgroundColor: '#fff', borderRadius: 10, justifyContent: 'center', alignItems: 'center', borderWidth: 0, }}>
-                    <FA5 name={'cog'} size={26} style={{ paddingBottom: 10, }} />
-                    <Text style={{ ...fonts.type1, }}>
-                        Settings
-                    </Text>
-                </TouchableOpacity>
-            </View> */}
             <TouchableOpacity
                 onPress={() => { navigation.navigate('ChangePassword') }}
                 style={{

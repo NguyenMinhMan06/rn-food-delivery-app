@@ -1,4 +1,4 @@
-import { GET_ITEM_CAT_FAIL, GET_ITEM_CAT_SUCCESS, GET_ITEM_FAIL, GET_ITEM_SUCCESS, LOGOUT_SUCCESS, } from "../action/actionType";
+import { GET_ITEM_CAT_FAIL, GET_ITEM_CAT_SUCCESS, LOGOUT_SUCCESS } from "../action/actionType";
 
 const initialState = {
     isLoading: true,
