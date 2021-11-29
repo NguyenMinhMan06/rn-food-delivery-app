@@ -1,0 +1,9 @@
+Admin Account for testing
+email: admin@admin.com
+password: 123321
+
+manager account for testing
+email: man2@man.com
+password: 123321
+
+To run the code, download the source code and npm i to install packages. Then, npx react-native run-android to start the app.
