@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { windowHeight, windowWidth } from '../../../../utils/Dimentions';
 import { colors, fonts } from '../../../../assets/style';
 import { numberWithCommas } from '../../../../utils/function';
@@ -13,54 +12,82 @@ const OrderInfo = ({ navigation, route }) => {
     const stateUser = useSelector(state => state.user)
 
     const [item, setItem] = useState(route.params.item)
+    console.log(route.params.item)
 
-    // const [isLoading, setIsLoading] = useState(true)
+    const [modalCancelOrder, setModalCancelOrder] = useState(false)
+    const [modalConfirmOrder, setModalConfirmOrder] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
+    const checkOrderStatus = (orderStatus) => {
+        switch (orderStatus) {
+            case 0:
+                return 'On going'
+            case 1:
+                return 'Confirmed'
+            case 2:
+                return 'Store Cancel'
+            case -1:
+                return 'User Cancel'
+            default:
+                break;
+        }
+    }
+    const onPressCancelOrder = async () => {
+        setIsLoading(true)
+        try {
+            const response = await firestore().collection('users')
+                .doc(`${item.userId}`)
+                .collection('orders')
+                .doc(`${item.id}`)
+                .update({
+                    orderStatus: 2
+                }).then(() => {
+                    firestore()
+                        .collection('orders')
+                        .doc(`${item.id}`)
+                        .update({
+                            orderStatus: 2
+                        }).then(() => {
+                            console.log('update succeccfully')
+                            setItem({ ...item, orderStatus: 2 })
+                            setIsLoading(false)
+                            setModalCancelOrder(!modalCancelOrder)
+                        })
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-
-
-    // if (isLoading) {
-    //     return (
-    //         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-    //             <Modal
-    //                 transparent={true}
-    //                 visible={true}
-    //             >
-    //                 <View style={{
-    //                     justifyContent: 'flex-end',
-    //                     height: windowHeight,
-    //                     justifyContent: 'center',
-    //                     alignItems: 'center',
-    //                     backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    //                 }}>
-    //                     <View style={{
-    //                         height: windowHeight / 6,
-    //                         justifyContent: 'space-between',
-    //                         alignItems: 'center',
-    //                         backgroundColor: '#fff',
-    //                         width: windowWidth / 1.5
-    //                     }}>
-    //                         <View style={{
-    //                             width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', padding: '3%', borderBottomWidth: 1, borderColor: '#adaba3'
-    //                         }}>
-    //                             <Text style={{ ...fonts.type1, fontSize: 20, fontWeight: 'bold' }}>
-    //                                 Loading data please wait...
-    //                             </Text>
-    //                         </View>
-    //                         <View style={{ padding: 20 }}>
-    //                             <ActivityIndicator size="large" color="grey" />
-
-    //                         </View>
-    //                     </View>
-    //                 </View>
-
-    //             </Modal>
-    //         </View>
-    //     );
-    // }
+    const onPressConfirmOrder = async () => {
+        setIsLoading(true)
+        try {
+            const response = await firestore().collection('users')
+                .doc(`${item.userId}`)
+                .collection('orders')
+                .doc(`${item.id}`)
+                .update({
+                    orderStatus: 1
+                }).then(() => {
+                    firestore()
+                        .collection('orders')
+                        .doc(`${item.id}`)
+                        .update({
+                            orderStatus: 1
+                        }).then(() => {
+                            console.log('update succeccfully')
+                            setItem({ ...item, orderStatus: 1 })
+                            setIsLoading(false)
+                            setModalConfirmOrder(!modalConfirmOrder)
+                        })
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
-        <View>
+        <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={{ width: '100%', }}>
 
                 <TouchableOpacity disabled style={{ justifyContent: 'flex-start', width: '100%', paddingHorizontal: '3%', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.grey, paddingVertical: 10, alignItems: 'center' }}>
@@ -102,13 +129,213 @@ const OrderInfo = ({ navigation, route }) => {
                             {numberWithCommas(item.totalPrice)} VND
                         </Text>
                     </View>
-
-                </View>
-                <View style={{ height: 50 }}>
-
+                    <View style={{ flexDirection: 'row', padding: 10, paddingHorizontal: '3%', justifyContent: 'space-between', }}>
+                        <Text style={{ ...fonts.type1, fontSize: 18, fontWeight: 'bold' }}>
+                            Status
+                        </Text>
+                        <Text style={{ ...fonts.type1, fontSize: 18, color: item.orderStatus == 1 ? 'green' : colors.default, fontWeight: 'bold' }}>
+                            {checkOrderStatus(item.orderStatus)}
+                        </Text>
+                    </View>
                 </View>
             </ScrollView>
-        </View>
+            <View style={{ height: 50 }}></View>
+            {item.orderStatus == 0 ?
+                <View style={{ paddingHorizontal: '3%', flexDirection: 'row', width: '100%', justifyContent: 'space-between', position: 'absolute', bottom: 10, }}>
+                    <TouchableOpacity
+                        onPress={() => { setModalCancelOrder(!modalCancelOrder) }}
+                        style={{ width: '48%', alignItems: 'center', backgroundColor: colors.default, padding: 10, }}>
+                        <Text style={{ ...fonts.type1, fontSize: 18, color: '#fff', fontWeight: 'bold' }}>
+                            Cancel order
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => { setModalConfirmOrder(!modalConfirmOrder) }}
+                        style={{ width: '48%', alignItems: 'center', backgroundColor: colors.default, padding: 10, }}>
+                        <Text style={{ ...fonts.type1, fontSize: 18, color: '#fff', fontWeight: 'bold' }}>
+                            Confirm order
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                : null}
+
+            {/* Modal cancel Order */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalCancelOrder}
+                onRequestClose={() => {
+                    setModalCancelOrder(!modalCancelOrder)
+                }}
+            >
+                <View style={{
+                    justifyContent: 'flex-end',
+                    height: windowHeight,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                }}>
+                    <View style={{
+                        height: isLoading ? windowHeight / 4 : windowHeight / 5,
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: '#fff',
+                        width: windowWidth / 1.3
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            padding: '3%',
+                            borderBottomWidth: 1,
+                            borderColor: '#adaba3'
+                        }}>
+                            <Text style={{ ...fonts.type1, fontSize: 20, fontWeight: 'bold' }}>
+                                Confirm cancel order
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={{ ...fonts.type1 }}>
+                                You sure you want to cancel this order?
+                            </Text>
+                        </View>
+
+                        {isLoading ?
+                            <View>
+                                <View style={{ padding: 10 }}>
+                                    <ActivityIndicator size="large" color="grey" />
+                                </View>
+                            </View>
+                            : null
+                        }
+
+                        <View style={{ flexDirection: 'row', width: '100%', padding: 6, justifyContent: 'space-evenly' }}>
+                            <View style={{ width: '40%', justifyContent: 'center', alignItems: 'center', }}>
+                                <TouchableOpacity
+                                    style={{
+                                        width: '80%',
+                                        borderRadius: 10,
+                                        padding: 12,
+                                    }}
+                                    onPress={() => { setModalCancelOrder(!modalCancelOrder) }}>
+                                    <Text style={{ ...fonts.type1, color: colors.grey, textAlign: 'center' }}>
+                                        Cancel
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{
+                                width: '40%',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+
+                            }}>
+                                <TouchableOpacity style={{
+                                    backgroundColor: 'red',
+                                    width: '80%',
+                                    borderRadius: 10,
+                                    padding: 12,
+                                }} onPress={() => { onPressCancelOrder() }} >
+                                    <Text style={{ ...fonts.type1, color: '#fff', textAlign: 'center' }}>
+                                        Yes
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Modal confirm Order */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalConfirmOrder}
+                onRequestClose={() => {
+                    setModalConfirmOrder(!modalConfirmOrder)
+                }}
+            >
+                <View style={{
+                    justifyContent: 'flex-end',
+                    height: windowHeight,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                }}>
+                    <View style={{
+                        height: isLoading ? windowHeight / 4 : windowHeight / 5,
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: '#fff',
+                        width: windowWidth / 1.3
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            padding: '3%',
+                            borderBottomWidth: 1,
+                            borderColor: '#adaba3'
+                        }}>
+                            <Text style={{ ...fonts.type1, fontSize: 20, fontWeight: 'bold' }}>
+                                Confirm order
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={{ ...fonts.type1 }}>
+                                Ship this order?
+                            </Text>
+                        </View>
+
+                        {isLoading ?
+                            <View>
+                                <View style={{ padding: 10 }}>
+                                    <ActivityIndicator size="large" color="grey" />
+                                </View>
+                            </View>
+                            : null
+                        }
+
+                        <View style={{ flexDirection: 'row', width: '100%', padding: 6, justifyContent: 'space-evenly' }}>
+                            <View style={{ width: '40%', justifyContent: 'center', alignItems: 'center', }}>
+                                <TouchableOpacity
+                                    style={{
+                                        width: '80%',
+                                        borderRadius: 10,
+                                        padding: 12,
+                                    }}
+                                    onPress={() => {
+                                        setModalConfirmOrder(!modalConfirmOrder)
+                                    }}>
+                                    <Text style={{ ...fonts.type1, color: colors.grey, textAlign: 'center' }}>
+                                        Cancel
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{
+                                width: '40%',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+
+                            }}>
+                                <TouchableOpacity style={{
+                                    backgroundColor: 'green',
+                                    width: '80%',
+                                    borderRadius: 10,
+                                    padding: 12,
+                                }} onPress={() => { onPressConfirmOrder() }} >
+                                    <Text style={{ ...fonts.type1, color: '#fff', textAlign: 'center' }}>
+                                        Yes
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+        </SafeAreaView>
     )
 }
 

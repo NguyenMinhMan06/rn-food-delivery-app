@@ -146,7 +146,9 @@ const Cart = ({ navigation, route }) => {
                     totalPrice: totalCartPrice,
                     receiverAddress: { coords: homeState.response?.coords, address: homeState.response?.address ? homeState.response?.address : '' },
                     createAt: timer,
-                    orderItem: orderItem
+                    orderItem: orderItem,
+                    orderStatus: 0
+
                 }).then((docref) => {
                     firestore()
                         .collection('orders')
@@ -159,7 +161,9 @@ const Cart = ({ navigation, route }) => {
                             totalPrice: totalCartPrice,
                             receiverAddress: { coords: homeState.response?.coords, address: homeState.response?.address ? homeState.response?.address : '' },
                             createAt: timer,
-                            orderItem: orderItem
+                            orderItem: orderItem,
+                            orderStatus: 0,
+                            userId: homeState.response?.id
                         }).then(() => {
                             console.log('add to order successfully')
                         })

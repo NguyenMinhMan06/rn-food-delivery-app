@@ -44,21 +44,6 @@ const AddProduct = () => {
         setItem()
     }, [])
 
-    // const addProductFireStore = async (catid, catname, foodname, des, price) => {
-    //     try {
-    //         await firestore().collection('foods').doc('foodDetail').collection('food').add({
-    //             catId: catid,
-    //             catName: catname,
-    //             description: des,
-    //             foodName: foodname,
-    //             price: price,
-    //             rating: 0
-    //         }).then((doc) => console.log(doc.id))
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
     const [showMessage, setShowMessage] = useState(false)
     const [message, setMessage] = useState('')
 

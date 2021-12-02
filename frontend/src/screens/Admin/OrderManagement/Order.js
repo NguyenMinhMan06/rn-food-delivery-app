@@ -3,10 +3,11 @@ import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, Touchabl
 import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
 import { arrayIsEmpty } from '../../../../utils/function';
+import { useIsFocused } from '@react-navigation/core';
 
 const Order = ({ navigation }) => {
     const stateUser = useSelector(state => state.user)
-    console.log(stateUser)
+    // console.log(stateUser)
 
     const [branchListOrder, setBranchListOrder] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -25,7 +26,8 @@ const Order = ({ navigation }) => {
                     .get()
                     .then(querySnapShot => {
                         querySnapShot.forEach(doc => {
-                            newList.push({ ...doc.data() })
+                            const docid = doc.id
+                            newList.push({ ...doc.data(), id: docid })
                         })
                     }).then(() => {
                         setIsLoading(false)
@@ -38,8 +40,9 @@ const Order = ({ navigation }) => {
                     .then(querySnapShot => {
                         querySnapShot.forEach(doc => {
                             const { shopAddress } = doc.data()
+                            const docid = doc.id
                             if (shopAddress.id == stateUser.response.branch) {
-                                newList.push({ ...doc.data() })
+                                newList.push({ ...doc.data(), id: docid })
                             }
                         })
                     }).then(() => {
@@ -53,6 +56,12 @@ const Order = ({ navigation }) => {
 
         }
     }
+
+    const isFocused = useIsFocused()
+
+    useEffect(() => {
+        getOrderFromBranch()
+    }, [isFocused]);
 
     useEffect(() => {
         getOrderFromBranch()

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import { colors, fonts } from '../../../assets/style'
 import { numberWithCommas } from '../../../utils/function'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { windowHeight, windowWidth } from '../../../utils/Dimentions'
+import firestore from '@react-native-firebase/firestore';
 
 
 const HistoryOrderDetail = ({ navigation, route }) => {
@@ -15,10 +16,54 @@ const HistoryOrderDetail = ({ navigation, route }) => {
 
     const [item, setItem] = useState(route.params.item)
 
+    const [modalCancelOrder, setModalCancelOrder] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
+
+    const onPressCancelOrder = async () => {
+        setIsLoading(true)
+        try {
+            const response = await firestore().collection('users')
+                .doc(homeState.response?.id)
+                .collection('orders')
+                .doc(`${item.id}`)
+                .update({
+                    orderStatus: -1
+                }).then((docref) => {
+                    firestore()
+                        .collection('orders')
+                        .doc(`${item.id}`)
+                        .update({
+                            orderStatus: -1
+                        }).then(() => {
+                            console.log('update succeccfully')
+                            setItem({ ...item, orderStatus: -1 })
+                            setIsLoading(false)
+                            setModalCancelOrder(!modalCancelOrder)
+                        })
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const checkOrderStatus = (orderStatus) => {
+        switch (orderStatus) {
+            case 0:
+                return 'On going'
+            case 1:
+                return 'Confirmed'
+            case 2:
+                return 'Store Cancel'
+            case -1:
+                return 'User Cancel'
+            default:
+                break;
+        }
+    }
 
     return (
-        <View>
+        <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={{ width: '100%', }}>
 
                 <TouchableOpacity disabled style={{ justifyContent: 'flex-start', width: '100%', paddingHorizontal: '3%', flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.grey, paddingVertical: 10, alignItems: 'center' }}>
@@ -70,13 +115,119 @@ const HistoryOrderDetail = ({ navigation, route }) => {
                             {numberWithCommas(item.totalPrice)} VND
                         </Text>
                     </View>
-
-                </View>
-                <View style={{ height: 50 }}>
+                    <View style={{ flexDirection: 'row', padding: 10, paddingHorizontal: '3%', justifyContent: 'space-between', }}>
+                        <Text style={{ ...fonts.type1, fontSize: 18, fontWeight: 'bold' }}>
+                            Status
+                        </Text>
+                        <Text style={{ ...fonts.type1, fontSize: 18, color: item.orderStatus == 1 ? 'green' : colors.default, fontWeight: 'bold' }}>
+                            {checkOrderStatus(item.orderStatus)}
+                        </Text>
+                    </View>
 
                 </View>
             </ScrollView>
-        </View>
+            <View style={{ height: 50 }}></View>
+            {item.orderStatus == 0 ?
+                <TouchableOpacity
+                    onPress={() => { setModalCancelOrder(!modalCancelOrder) }}
+                    style={{ position: 'absolute', bottom: 10, width: '94%', marginHorizontal: '3%', alignItems: 'center', backgroundColor: colors.default, paddingVertical: 10, }}>
+                    <Text style={{ ...fonts.type1, fontSize: 18, color: '#fff', fontWeight: 'bold' }}>
+                        Cancel order
+                    </Text>
+                </TouchableOpacity>
+                : null
+            }
+
+            {/* Modal cancel Order */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalCancelOrder}
+                onRequestClose={() => {
+                    setModalCancelOrder(!modalCancelOrder)
+                }}
+            >
+                <View style={{
+                    justifyContent: 'flex-end',
+                    height: windowHeight,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                }}>
+                    <View style={{
+                        height: isLoading ? windowHeight / 4 : windowHeight / 5,
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: '#fff',
+                        width: windowWidth / 1.3
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            padding: '3%',
+                            borderBottomWidth: 1,
+                            borderColor: '#adaba3'
+                        }}>
+                            <Text style={{ ...fonts.type1, fontSize: 20, fontWeight: 'bold' }}>
+                                Confirm cancel order
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={{ ...fonts.type1 }}>
+                                You sure you want to cancel this order?
+                            </Text>
+                        </View>
+
+                        {isLoading ?
+                            <View>
+                                <View style={{ padding: 10 }}>
+                                    <ActivityIndicator size="large" color="grey" />
+                                </View>
+                            </View>
+                            : null
+                        }
+
+                        <View style={{ flexDirection: 'row', width: '100%', padding: 6, justifyContent: 'space-evenly' }}>
+                            <View style={{ width: '40%', justifyContent: 'center', alignItems: 'center', }}>
+                                <TouchableOpacity
+                                    style={{
+                                        width: '80%',
+                                        borderRadius: 10,
+                                        padding: 12,
+                                    }}
+                                    onPress={() => { setModalCancelOrder(!modalCancelOrder) }}>
+                                    <Text style={{ ...fonts.type1, color: colors.grey, textAlign: 'center' }}>
+                                        Cancel
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{
+                                width: '40%',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+
+                            }}>
+                                <TouchableOpacity style={{
+                                    backgroundColor: 'red',
+                                    width: '80%',
+                                    borderRadius: 10,
+                                    padding: 12,
+                                }} onPress={() => { onPressCancelOrder() }} >
+                                    <Text style={{ ...fonts.type1, color: '#fff', textAlign: 'center' }}>
+                                        Yes
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    </View>
+                </View>
+
+            </Modal>
+
+        </SafeAreaView>
     )
 }
 
