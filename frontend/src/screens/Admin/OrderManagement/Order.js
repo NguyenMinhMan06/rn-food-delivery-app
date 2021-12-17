@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
 import { arrayIsEmpty } from '../../../../utils/function';
 import { useIsFocused } from '@react-navigation/core';
+import { fonts } from '../../../../assets/style';
 
 const Order = ({ navigation }) => {
     const stateUser = useSelector(state => state.user)

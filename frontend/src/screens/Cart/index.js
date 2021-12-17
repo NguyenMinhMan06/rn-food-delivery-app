@@ -282,7 +282,7 @@ const Cart = ({ navigation, route }) => {
                                 Subtotal ({cartItem.length} item{cartItem.length >= 2 ? 's' : null})
                             </Text>
                             <Text>
-                                {numberWithCommas(totalCartPrice)} VND
+                                {numberWithCommas(totalCartPrice - shippPrice)} VND
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', padding: 10, paddingHorizontal: '3%', borderColor: colors.grey, justifyContent: 'space-between', borderBottomWidth: 1, }}>
